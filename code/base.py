@@ -18,16 +18,23 @@ class BaseLexer(object):
     # A string containing ignored characters (spaces and tabs)
     t_ignore = ' \t'
 
-    def t_NUMBER(self, t):
+    def t_INT(self, t):
         r'[+-]?\b[0-9]+\b'
         t.value = int(t.value)
         return t
 
     # Error handling rule
     def t_error(self, t):
-        print("Illegal character '%s'" % t.value[0])
-        t.lexer.skip(1)
+        raise SyntaxError("Illegal character {}".format(t.value[0]))
 
     # Build the lexer
     def build(self, **kwargs):
         self.lexer = lex.lex(module=self, **kwargs)
+
+    def analyze(self, text):
+        self.lexer.input(text)
+        while True:
+            tok = self.lexer.token()
+            if not tok:
+                break
+            print(tok)
