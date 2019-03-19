@@ -42,3 +42,16 @@ class BaseLexer(object):
             if not tok:
                 break
             print(tok)
+
+
+class BaseParser(object):
+    def p_empty(self, p):
+        'empty :'
+        pass
+
+    def build(self, **kwargs):
+        self.parser = yacc.yacc(module=self, **kwargs)
+
+    def parse(self, text):
+        result = self.parser.parse(text)
+        print(result)
