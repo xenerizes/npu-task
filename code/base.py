@@ -13,10 +13,14 @@ class BaseLexer(object):
     t_PLUS = r'\+'
     t_COMMA = r'\,'
     t_COLON = r'\:'
-    t_HEX = r'0[xX][0-9a-fA-F]+'
 
     # A string containing ignored characters (spaces and tabs)
     t_ignore = ' \t'
+
+    def t_HEX(self, t):
+        r'0[xX][0-9a-fA-F]+'
+        t.value = int(t.value, 0)
+        return t
 
     def t_INT(self, t):
         r'[+-]?\b[0-9]+\b'
