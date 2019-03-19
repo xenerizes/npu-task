@@ -4,7 +4,7 @@ from .base import BaseLexer
 class MatchActionLexer(BaseLexer):
     # Reserved tokens
     reserved = {
-        'match-action': 'MA',
+        'match_action': 'MA',
         'PHV': 'PHV',
         'PORTMASK': 'PORTMASK',
         'mov': 'MOV',

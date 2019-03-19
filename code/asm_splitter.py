@@ -11,7 +11,7 @@ def l2sw_example():
 def split_parse(text):
     lst = text.split('.')
     parser_data = [x for x in lst if x.startswith('parser')]
-    ma_data = [x for x in lst if x.startswith('match-action')]
+    ma_data = [x for x in lst if x.startswith('match_action')]
     deparser_data = [x for x in lst if x.startswith('deparser')]
     if len(parser_data) != 1 or len(ma_data) < 1 or len(deparser_data) != 1:
         raise SyntaxError("At least one section of each type .parser, "
