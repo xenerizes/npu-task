@@ -1,10 +1,5 @@
 class Deparser(object):
-    def __init__(self, commands):
-        self.commands = commands
+    def __init__(self, data):
+        self.text = data
         self.phv = None
         self.header = None
-
-    def process(self, packet, context):
-        for cmd in self.commands:
-            packet = cmd.run(packet, context)
-        return packet
