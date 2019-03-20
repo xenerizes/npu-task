@@ -27,7 +27,7 @@ class BaseLexer(object):
 
     # Error handling rule
     def t_error(self, t):
-        raise SyntaxError("Illegal character {}".format(t.value[0]))
+        raise SyntaxError("Illegal character {}".format(t))
 
     # Build the lexer
     def build(self, **kwargs):
