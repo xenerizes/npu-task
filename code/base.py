@@ -23,7 +23,7 @@ class BaseLexer(object):
         return t
 
     def t_INT(self, t):
-        r'[+-]?\b[0-9]+\b'
+        r'\b[0-9]+\b'
         t.value = int(t.value)
         return t
 
@@ -49,9 +49,12 @@ class BaseParser(object):
         'empty :'
         pass
 
+    def p_error(self, p):
+        raise SyntaxError("Syntax error in input: {}".format(p))
+
     def build(self, **kwargs):
         self.parser = yacc.yacc(module=self, **kwargs)
 
-    def parse(self, text):
-        result = self.parser.parse(text)
+    def parse(self, text, lexer):
+        result = self.parser.parse(text, lexer=lexer)
         print(result)
