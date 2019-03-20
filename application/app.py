@@ -66,4 +66,12 @@ class Application(object):
         pass
 
     def __run_model(self):
-        pass
+        output = []
+        for packet in self.input:
+            portmask = None
+            for p in self.processors:
+                res, portmask = p.process(packet)
+                if not res:
+                    break
+            output.append((packet, portmask))
+        return output
