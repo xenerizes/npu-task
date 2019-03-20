@@ -11,7 +11,7 @@
 done:
 
 .match_action 2
-    mov r1, PHV+12, 6
+    load r1, PHV+12, 6
     call exact_match
     cmpje r2, 1, not_found
     ori PORTMASK, r1
