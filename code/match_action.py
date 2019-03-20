@@ -2,6 +2,9 @@ from .base import BaseLexer, BaseParser
 
 
 class MatchActionLexer(BaseLexer):
+    simple_tokens = [
+        'ID', 'COLON'
+    ]
     # Reserved tokens
     reserved = {
         'match_action': 'MA',
@@ -23,7 +26,7 @@ class MatchActionLexer(BaseLexer):
         'halt': 'HALT'
     }
 
-    tokens = BaseLexer.simple_tokens + list(reserved.values())
+    tokens = simple_tokens + BaseLexer.simple_tokens + list(reserved.values())
 
     def t_ID(self, t):
         r'[a-zA-Z_][a-zA-Z_0-9]*'

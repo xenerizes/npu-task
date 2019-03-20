@@ -4,15 +4,13 @@ import ply.yacc as yacc
 
 class BaseLexer(object):
     simple_tokens = [
-        'COLON', 'PLUS', 'COMMA',
-        'INT', 'HEX',
-        'ID'
+        'PLUS', 'COMMA',
+        'INT', 'HEX'
     ]
 
     # Regex for simple tokens
     t_PLUS = r'\+'
     t_COMMA = r'\,'
-    t_COLON = r'\:'
 
     # A string containing ignored characters (spaces and tabs)
     t_ignore = ' \t'

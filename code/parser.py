@@ -2,6 +2,9 @@ from .base import BaseLexer, BaseParser
 
 
 class ParserLexer(BaseLexer):
+    simple_tokens = [
+        'ID', 'COLON'
+    ]
     # Reserved tokens
     reserved = {
         'parser': 'PARSE',
@@ -17,7 +20,9 @@ class ParserLexer(BaseLexer):
         'halt': 'HALT'
     }
 
-    tokens = BaseLexer.simple_tokens + list(reserved.values())
+    t_COLON = r'\:'
+
+    tokens = simple_tokens + BaseLexer.simple_tokens + list(reserved.values())
 
     def t_ID(self, t):
         r'[a-zA-Z_][a-zA-Z_0-9]*'
