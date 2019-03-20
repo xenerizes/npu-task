@@ -28,6 +28,8 @@ class MatchActionLexer(BaseLexer):
 
     tokens = simple_tokens + BaseLexer.simple_tokens + list(reserved.values())
 
+    t_COLON = r'\:'
+
     def t_ID(self, t):
         r'[a-zA-Z_][a-zA-Z_0-9]*'
         t.type = MatchActionLexer.reserved.get(t.value, 'ID')  # Check for reserved words
