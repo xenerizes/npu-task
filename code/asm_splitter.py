@@ -1,4 +1,6 @@
-from .parser import ParserLexer
+from .parser import ParserParser
+from .match_action import MatchActionParser
+from .deparser import DeparserParser
 
 
 def l2sw_example():
@@ -16,10 +18,15 @@ def split_parse(text):
     if len(parser_data) != 1 or len(ma_data) < 1 or len(deparser_data) != 1:
         raise SyntaxError("At least one section of each type .parser, "
                           ".match-action and .deparser are required")
-    pl = ParserLexer()
-    pl.build()
-    print(parser_data)
-    pl.analyze(parser_data[0])
+    parsers = {
+        " ".join(parser_data): ParserParser(),
+        " ".join(ma_data): MatchActionParser(),
+        " ".join(deparser_data): DeparserParser()
+    }
+
+    for data, parser in parsers.items():
+        parser.build()
+        parser.parse(data)
 
 
 def test():
