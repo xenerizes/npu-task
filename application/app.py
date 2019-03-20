@@ -1,5 +1,5 @@
-from argparse import ArgumentParser, FileType
-from code import *
+from argparse import ArgumentParser
+from model import *
 
 
 def make_parser():
@@ -15,13 +15,12 @@ class Application(object):
         self.args = parser.parse_args(args)
         self.asm = None
         self.syntax = None
+        self.processors = []
 
     def run(self):
         self.asm = self.__read_asm()
         self.syntax = self.__split()
-        for data, parser in self.syntax.items():
-            parser.build()
-            parser.parse(data)
+        self.__make_processors()
 
     def __read_asm(self):
         with open(self.args.asm, 'r') as f:
@@ -38,7 +37,12 @@ class Application(object):
             raise SyntaxError("At least one section of each type .parser, "
                               ".match-action and .deparser are required")
         return {
-            " ".join(parser_data): ParserParser(),
-            " ".join(ma_data): MatchActionParser(),
-            " ".join(deparser_data): DeparserParser()
+            Parser: parser_data,
+            MatchAction: ma_data,
+            Deparser: deparser_data
         }
+
+    def __make_processors(self):
+        for processor, data in self.syntax.items():
+            for section in data:
+                self.processors.append(processor(section))
