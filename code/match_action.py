@@ -38,6 +38,11 @@ class MatchActionParser(BaseParser):
     tokens = MatchActionLexer.tokens
     start = 'ma_sequence'
 
+    def parse(self, text):
+        lexer = MatchActionLexer()
+        lexer.build()
+        result = self.parser.parse(text, lexer=lexer.lexer)
+
     def p_ma_sequence(self, p):
         '''ma_sequence : empty
                        | ma ma_sequence'''

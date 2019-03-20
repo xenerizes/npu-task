@@ -53,6 +53,5 @@ class BaseParser(object):
     def build(self, **kwargs):
         self.parser = yacc.yacc(module=self, **kwargs)
 
-    def parse(self, text, lexer):
-        result = self.parser.parse(text, lexer=lexer)
-        print(result)
+    def parse(self, text):
+        pass

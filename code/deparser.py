@@ -22,6 +22,11 @@ class DeparserParser(BaseParser):
     tokens = DeparserLexer.tokens
     start = 'deparser'
 
+    def parse(self, text):
+        lexer = DeparserLexer()
+        lexer.build()
+        result = self.parser.parse(text, lexer=lexer.lexer)
+
     def p_deparser(self, p):
         'deparser : DPRS code'
 

@@ -34,6 +34,11 @@ class ParserParser(BaseParser):
     tokens = ParserLexer.tokens
     start = 'parser'
 
+    def parse(self, text):
+        lexer = ParserLexer()
+        lexer.build()
+        result = self.parser.parse(text, lexer=lexer.lexer)
+
     def p_parser(self, p):
         'parser : PARSE parse_code'
 
