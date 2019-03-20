@@ -1,5 +1,6 @@
 class Section(object):
-    pass
+    def __init__(self, name):
+        self.name = name
 
 
 class BinOp(object):
@@ -15,7 +16,7 @@ class TernaryOp(object):
 
 
 class Jump(object):
-    def __init(self, reg, num, label):
+    def __init__(self, reg, num, label):
         self.reg = reg
         self.num = num
         self.label = label
@@ -38,3 +39,8 @@ class Hdr(object):
 
 class Halt(object):
     pass
+
+
+class Reg(object):
+    def __init__(self, name):
+        self.name = name

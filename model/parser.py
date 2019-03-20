@@ -12,25 +12,36 @@ class Parser(object):
     def process(self, packet):
         pass
 
-    def store(self, phv_shift, hdr_shift, nbytes):
-        self.header[hdr_shift:hdr_shift + nbytes] = self.phv[phv_shift:phv_shift + nbytes]
+    def store(self, phv, hdr, nbytes):
+        self.header[hdr.shift:hdr.shift + nbytes] = self.phv[phv.shift:phv.shift + nbytes]
 
     def mov(self, dst, src, nbytes):
         value = None
         if type(src) == Phv:
             value = self.phv[src.shift:src.shift + nbytes]
+        elif type(src) == int:
+            value = int
+        elif type(src) == str:
+            pass
+        elif type(src) == Reg:
+            value = getattr(self, src.name)[:nbytes]
         else:
-            value = getattr(self, src)[:nbytes]
+            raise Exception('Unknown second operand for mov')
+
         if type(dst) == Phv:
             self.phv[dst.shift:dst.shift + nbytes] = value
-        else:
+        elif type(dst) == str:
             setattr(self, dst, value)
+        else:
+            raise Exception('Unknown second operand for mov')
 
     def cmpje(self, reg, number, label):
-        pass
+        if getattr(self, reg) == number:
+            pass
 
     def cmpjn(self, reg, number, label):
-        pass
+        if getattr(self, reg) != number:
+            pass
 
     def j(self, reg, number, label):
         pass
