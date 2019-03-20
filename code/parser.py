@@ -38,15 +38,19 @@ class ParserParser(BaseParser):
     def parse(self, text):
         lexer = ParserLexer()
         lexer.build()
-        result = self.parser.parse(text, lexer=lexer.lexer)
+        return self.parser.parse(text, lexer=lexer.lexer)
 
     def p_parser(self, p):
         'parser : PARSE parse_code'
-        p[0] = Section('parse')
+        p[0] = Node([p[2]], Section('parse'))
 
     def p_parse_code(self, p):
         '''parse_code : empty
                       | instruction parse_code'''
+        if len(p) == 3:
+            p[0] = Node([p[2]], p[1])
+        else:
+            p[0] = Node()
 
     def p_instructions(self, p):
         '''instruction : store
@@ -55,30 +59,31 @@ class ParserParser(BaseParser):
                        | cmpjn
                        | j
                        | label'''
+        p[0] = p[1]
 
     def p_store(self, p):
         'store : STORE phv COMMA header COMMA INT'
-        p[0] = TernaryOp('store', p[2], p[4], p[6])
+        p[0] = Node([], TernaryOp('store', p[2], p[4], p[6]))
 
     def p_mov(self, p):
         'mov : MOV regmem COMMA allval COMMA INT'
-        p[0] = TernaryOp('store', p[2], p[4], p[6])
+        p[0] = Node([], TernaryOp('store', p[2], p[4], p[6]))
 
     def p_cmpje(self, p):
         'cmpje : CMPJE reg COMMA number COMMA label_id'
-        p[0] = Jump(p[2], p[4], p[6])
+        p[0] = Node([], Jump(p[2], p[4], p[6]))
 
     def p_cmpjn(self, p):
         'cmpjn : CMPJN reg COMMA number COMMA label_id'
-        p[0] = Jump(p[2], p[4], p[6])
+        p[0] = Node([], Jump(p[2], p[4], p[6]))
 
     def p_j(self, p):
         'j : J label_id'
-        p[0] = Jump(0, 0, p[2])
+        p[0] = Node([], Jump(0, 0, p[2]))
 
     def p_label(self, p):
         'label : label_id COLON'
-        p[0] = Label(p[1])
+        p[0] = Node([], Label(p[1]))
 
     def p_label_id(self, p):
         '''label_id : ID

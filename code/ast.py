@@ -1,3 +1,12 @@
+class Node(object):
+    def __init__(self, children=None, leaf=None):
+        if children:
+            self.children = children
+        else:
+            self.children = []
+        self.leaf = leaf
+
+
 class Section(object):
     def __init__(self, name):
         self.name = name
