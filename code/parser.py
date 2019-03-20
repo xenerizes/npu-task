@@ -38,6 +38,7 @@ class ParserParser(BaseParser):
     def parse(self, text):
         lexer = ParserLexer()
         lexer.build()
+        self.build()
         return self.parser.parse(text, lexer=lexer.lexer)
 
     def p_parser(self, p):

@@ -1,13 +1,20 @@
 from code.ast import *
+from code import ParserParser
 
 
 class Parser(object):
-    def __init__(self, ast):
-        self.ast = ast
+    def __init__(self, data):
+        self.text = data
+        self.ast = self.generate_ast()
         self.phv = [0] * 80
         self.header = [0] * 80
         self.r1 = [0] * 64
         self.r2 = [0] * 64
+        print(self.ast)
+
+    def generate_ast(self):
+        parser = ParserParser()
+        return parser.parse(self.text)
 
     def process(self, packet):
         pass

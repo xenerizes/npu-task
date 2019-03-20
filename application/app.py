@@ -9,18 +9,30 @@ def make_parser():
     return parser
 
 
+def compare_output(real, expected):
+    return True
+
+
 class Application(object):
     def __init__(self, args):
         parser = make_parser()
         self.args = parser.parse_args(args)
         self.asm = None
         self.syntax = None
+        self.input = None
+        self.output = None
+        self.expected = None
         self.processors = []
 
     def run(self):
         self.asm = self.__read_asm()
         self.syntax = self.__split()
         self.__make_processors()
+        self.input = self.__load_in_pcaps()
+        self.expected = self.__load_out_pcaps()
+        self.output = self.__run_model()
+        if compare_output(self.output, self.expected):
+            print('ok!')
 
     def __read_asm(self):
         with open(self.args.asm, 'r') as f:
@@ -46,3 +58,12 @@ class Application(object):
         for processor, data in self.syntax.items():
             for section in data:
                 self.processors.append(processor(section))
+
+    def __load_in_pcaps(self):
+        pass
+
+    def __load_out_pcaps(self):
+        pass
+
+    def __run_model(self):
+        pass
