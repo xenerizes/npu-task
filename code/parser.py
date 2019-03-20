@@ -57,7 +57,7 @@ class ParserParser(BaseParser):
         'cmpjn : CMPJN reg COMMA number COMMA label_id'
 
     def p_j(self, p):
-        'j : J label'
+        'j : J label_id'
 
     def p_label(self, p):
         'label : label_id COLON'
