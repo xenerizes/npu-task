@@ -43,10 +43,10 @@ PORTMASK Адрес памяти, хранящей маску выходных �
 |or      | <register>/|<value>/   |          |
 |        | <memory>   |<register> |          |
 +--------+------------+-----------+----------+
-|and     | <register>/|<value>/   |          |
+|and     | <register> |<value>/   |          |
 |        |            |<register> |          |
 +--------+------------+-----------+----------+
-|xor     | <register>/|<value>/   |          |
+|xor     | <register> |<value>/   |          |
 |        |            |<register> |          |
 +--------+------------+-----------+----------+
 |shl     | <register> |<value>    |          |
