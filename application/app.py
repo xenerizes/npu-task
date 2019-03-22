@@ -31,11 +31,8 @@ def compare_output(real, expected):
     if len(real) != len(expected):
         return False
     for port, packets in real.items():
-        if len(expected[port]) != len(packets):
+        if set(packets) != set(expected[port]):
             return False
-        for packet in packets:
-            if packet not in expected[port]:
-                return False
     return True
 
 
