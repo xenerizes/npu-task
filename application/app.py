@@ -6,6 +6,8 @@ def make_parser():
     parser = ArgumentParser(description='NPU model')
     parser.add_argument('asm', metavar='ASM', type=str,
                         help='filename with assembler code')
+    parser.add_argument('--in', metavar='PCAP', type=str, default=[],
+                        help='pcap file with ')
     return parser
 
 
@@ -29,10 +31,11 @@ class Application(object):
         self.syntax = self.__split()
         self.__make_processors()
         self.input = self.__load_in_pcaps()
-        self.expected = self.__load_out_pcaps()
-        self.output = self.__run_model()
-        if compare_output(self.output, self.expected):
-            print('ok!')
+        if self.input is not None:
+            self.expected = self.__load_out_pcaps()
+            self.output = self.__run_model()
+            if compare_output(self.output, self.expected):
+                print('ok!')
 
     def __read_asm(self):
         with open(self.args.asm, 'r') as f:
