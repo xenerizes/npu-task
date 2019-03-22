@@ -26,6 +26,8 @@ def convert_portmask(portmask):
 def compare_output(real, expected):
     print(real)
     print(expected)
+    if None in [real, expected]:
+        return False
     if len(real) != len(expected):
         return False
     for port, packets in real.items():
