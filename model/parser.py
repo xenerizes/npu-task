@@ -1,10 +1,11 @@
 from code.ast import *
 from code import ParserParser
 from .defines import *
+from .byte_conversion import to_bytes
 
 
 def _split_header(packet):
-    return packet[:HEADER_LEN]
+    return [b for b in packet[:HEADER_LEN]]
 
 
 class Parser(object):
@@ -39,7 +40,7 @@ class Parser(object):
 
         return labels
 
-    def process(self, packet):
+    def process(self, packet, portmask):
         self.__clear_mem()
         self.header = _split_header(packet)
         current = self.ast
@@ -50,7 +51,7 @@ class Parser(object):
             if isinstance(leaf, Op):
                 getattr(self, leaf.opcode)(leaf)
             elif isinstance(leaf, Jump):
-                if getattr(self, leaf.opcode)():
+                if getattr(self, leaf.opcode)(leaf):
                     if leaf.label == HALT_LABEL:
                         return None, None
                     if leaf.label not in self.labels:
@@ -62,36 +63,42 @@ class Parser(object):
 
             current = current.child
 
-        return self.header, None
+        return self.header, portmask
 
-    def store(self, phv, hdr, nbytes):
-        self.header[hdr.shift:hdr.shift + nbytes] = self.phv[phv.shift:phv.shift + nbytes]
+    def store(self, op):
+        phv_shift = op.first.shift
+        hdr_shift = op.second.shift
+        nbytes = op.third
+        self.header[hdr_shift:hdr_shift + nbytes] = self.phv[phv_shift:phv_shift + nbytes]
 
     def mov(self, op):
         value = None
-        if type(op.src) is Phv:
-            value = self.phv[op.src.shift:op.src.shift + op.nbytes]
-        elif type(op.src) is int:
-            value = int
-        elif type(op.src) is str:
-            pass
-        elif type(op.src) is Reg:
-            value = getattr(self, op.src.name)[:op.nbytes]
+        src = op.second
+        dst = op.first
+        nbytes = op.third
+        if isinstance(src, Phv):
+            phv_shift = src.shift
+            value = self.phv[phv_shift:phv_shift + nbytes]
+        elif isinstance(src, int):
+            value = to_bytes(src, nbytes)
+        elif isinstance(src, Reg):
+            value = getattr(self, src.name)[:nbytes]
         else:
-            raise Exception('Unknown type of first operand for mov: {}'.format(type(op.src)))
+            raise Exception('Unknown type of second operand for mov: {}'.format(type(src)))
 
-        if type(op.dst) is Phv:
-            self.phv[op.dst.shift:op.dst.shift + op.nbytes] = value
-        elif type(op.dst) is str:
-            setattr(self, op.dst, value)
+        if isinstance(dst, Phv):
+            self.phv[dst.shift:dst.shift + nbytes] = value
+        elif isinstance(dst, Reg):
+            reg = getattr(self, dst.name)
+            reg[:nbytes] = value
         else:
-            raise Exception('Unknown type of second operand for mov: {}'.format(type(op.dst)))
+            raise Exception('Unknown type of first operand for mov: {}'.format(type(op.dst)))
 
-    def cmpje(self, reg, number):
-        return getattr(self, reg) == number
+    def cmpje(self, op):
+        return getattr(self, op.reg.name) == op.num
 
-    def cmpjn(self, reg, number):
-        return getattr(self, reg) != number
+    def cmpjn(self, op):
+        return getattr(self, op.reg.name) != op.num
 
-    def j(self, reg, number):
+    def j(self, op):
         return True
