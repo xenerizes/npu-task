@@ -1,3 +1,10 @@
+from .defines import *
+
+
+def _update_header(packet, header):
+    packet[:HEADER_LEN] = header
+
+
 class Deparser(object):
     def __init__(self, data):
         self.text = data

@@ -1,17 +1,10 @@
 from code.ast import *
 from code import ParserParser
-
-PHV_LEN = 80
-HEADER_LEN = 80
-REGISTER_LEN = 64
+from .defines import *
 
 
 def _split_header(packet):
-    pass
-
-
-def _update_header(packet, header):
-    pass
+    return packet[:HEADER_LEN]
 
 
 class Parser(object):
@@ -23,7 +16,6 @@ class Parser(object):
         self.header = None
         self.r1 = None
         self.r2 = None
-        print(self.ast)
 
     def __clear_mem(self):
         self.phv = [0] * PHV_LEN
@@ -70,7 +62,7 @@ class Parser(object):
 
             current = current.child
 
-        return _update_header(packet, self.header)
+        return self.header
 
     def store(self, phv, hdr, nbytes):
         self.header[hdr.shift:hdr.shift + nbytes] = self.phv[phv.shift:phv.shift + nbytes]
