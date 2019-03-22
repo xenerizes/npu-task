@@ -65,6 +65,10 @@ class MatchAction(object):
                         raise Exception("Unknown label: {}".format(leaf.label))
                     current = self.labels[leaf.label].child
                     continue
+            elif isinstance(leaf, Call):
+                self.call(leaf.procedure)
+            elif isinstance(leaf, Label):
+                pass
             else:
                 raise Exception("Unexpected leaf type: {}".format(type(leaf)))
 
@@ -99,29 +103,47 @@ class MatchAction(object):
                 raise Exception("Cannot mov more than 1 byte to portmask!")
             self.portmask = value
         else:
-            raise Exception('Unknown type of first operand for mov: {}'.format(type(op.dst)))
+            raise Exception('Unknown type of first operand for mov: {}'.format(type(dst)))
 
-    def or_op(self, op):
+    def op_impl(self, op, func):
         value = None
-        src = op.second
-        dst = op.first
+        dst = op.left
+        src = op.right
         if isinstance(src, int):
-            value = src
+            value = [src]
         elif isinstance(src, Reg):
             value = getattr(self, src.name)
         else:
-            raise Exception('Unknown type of second operand for or: {}'.format(type(src)))
+            raise Exception('Unknown type of second operand for {}: {}'
+                            .format(op.opcode, type(src)))
 
         if isinstance(dst, Reg):
             reg = getattr(self, dst.name)
             value = to_register(value)
-            reg[:] = [reg[i] or value[i] for i in range(len(value))]
+            reg[:] = [func(reg[i], value[i]) for i in range(len(value))]
         elif isinstance(dst, Portmask):
-            if len(value) > 1:
-                raise Exception("Cannot mov more than 1 byte to portmask!")
-            self.portmask[0] = self.portmask[0] or value[0]
+            self.portmask[0] = func(self.portmask[0], value[0])
         else:
-            raise Exception('Unknown type of first operand for mov: {}'.format(type(op.dst)))
+            raise Exception('Unknown type of first operand for {}: {}'
+                            .format(op.opcode, type(dst)))
+
+    def or_op(self, op):
+        self.op_impl(op, lambda x, y: x or y)
+
+    def and_op(self, op):
+        self.op_impl(op, lambda x, y: x and y)
+
+    def xor_op(self, op):
+        self.op_impl(op, lambda x, y: not x and y or x and not y)
+
+    def shl(self, op):
+        pass
+
+    def shr(self, op):
+        pass
+
+    def call(self, procedure):
+        pass
 
     def cmpje(self, op):
         return getattr(self, op.reg.name) == op.num
