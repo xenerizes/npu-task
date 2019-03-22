@@ -53,6 +53,8 @@ class Parser(object):
                         raise Exception("Unknown label: {}".format(leaf.label))
                     current = self.labels[leaf.label].child
                     continue
+            elif isinstance(leaf, Label):
+                pass
             else:
                 raise Exception("Unexpected leaf type: {}".format(type(leaf)))
 
