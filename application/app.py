@@ -3,6 +3,9 @@ from model import *
 from scapy.packet import Raw
 from scapy.utils import rdpcap
 from glob import glob
+import logging
+
+logging.basicConfig(format='%(levelname)s: %(message)s', level=logging.DEBUG)
 
 
 def make_parser():
@@ -27,11 +30,17 @@ def compare_output(real, expected):
     print(real)
     print(expected)
     if None in [real, expected]:
+        logging.error("Nothing to compare at one of the sides!")
         return False
-    if len(real) != len(expected):
-        return False
+
     for port, packets in real.items():
+        if port not in expected:
+            if len(packets):
+                return False
+            continue
         if set(packets) != set(expected[port]):
+            logging.error("Expected {} packets on port {}, got {}"
+                          .format(len(expected[port]), port, len(packets)))
             return False
     return True
 
@@ -50,15 +59,21 @@ class Application(object):
     def run(self):
         self.asm = self.__read_asm()
         self.syntax = self.__split()
-        self.__make_processors()
         self.input = self.__load_in_pcaps()
-        if self.input is not None:
-            self.expected = self.__load_out_pcaps()
-            self.output = self.__run_model()
-            if compare_output(self.output, self.expected):
-                print('ok!')
+        if self.input is None:
+            logging.warning('Empty input, syntax check mode')
+
+        self.__make_processors()
+        logging.info("Syntax is correct")
+        if self.input is None:
+            return
+
+        self.expected = self.__load_out_pcaps()
+        self.output = self.__run_model()
+        if compare_output(self.output, self.expected):
+            logging.info('Ok!')
         else:
-            print('WARNING: empty input, only syntax checking was done')
+            logging.error('Packets didn\'t go as expected')
 
     def __read_asm(self):
         with open(self.args.asm, 'r') as f:
@@ -103,8 +118,10 @@ class Application(object):
     def __run_model(self):
         output = {port: list() for port in range(8)}
         for packet in self.input:
+            logging.debug("Starting packet processing...")
             context = Context(packet)
             for p in self.processors:
+                logging.debug("Processing by {} stage...".format(type(p).__name__))
                 context = p.process(context)
                 if not packet:
                     break
