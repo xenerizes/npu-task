@@ -4,7 +4,9 @@ from code.ast import *
 
 
 def _update_header(packet, header):
+    packet = bytearray(packet)
     packet[:HEADER_LEN] = header
+    packet = bytes(packet)
 
 
 class Deparser(object):
