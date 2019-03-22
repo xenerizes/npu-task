@@ -29,7 +29,7 @@ class Parser(object):
             if current is None:
                 break
             if type(current.leaf) is Label:
-                labels[current.name] = current
+                labels[current.leaf.name] = current
             current = current.child
 
         return labels

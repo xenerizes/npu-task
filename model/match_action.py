@@ -41,14 +41,14 @@ class MatchAction(object):
             if current is None:
                 break
             if type(current.leaf) is Label:
-                labels[current.name] = current
+                labels[current.leaf.name] = current
             current = current.child
 
         return labels
 
     def process(self, context):
         self.__clear_mem()
-        current = self.ast
+        current = self.ast.child
         self.phv = context.phv
         self.portmask = context.portmask
         while True:
