@@ -1,13 +1,17 @@
 from argparse import ArgumentParser
 from model import *
+from scapy.packet import Raw
+from scapy.utils import rdpcap
 
 
 def make_parser():
     parser = ArgumentParser(description='NPU model')
     parser.add_argument('asm', metavar='ASM', type=str,
                         help='filename with assembler code')
-    parser.add_argument('--in', metavar='PCAP', type=str, default=[],
+    parser.add_argument('-i', '--input', metavar='PCAP', type=str, default=None,
                         help='pcap file with ')
+    parser.add_argument('-o', '--output', metavar='DIR', type=str, default=None,
+                        help='directory containing output pcap files')
     return parser
 
 
@@ -63,7 +67,8 @@ class Application(object):
                 self.processors.append(processor(section))
 
     def __load_in_pcaps(self):
-        pass
+        return None if self.args.input is None \
+            else [Raw(packet).load for packet in rdpcap(self.args.input)]
 
     def __load_out_pcaps(self):
         pass
