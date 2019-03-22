@@ -12,4 +12,4 @@ class Deparser(object):
         self.header = None
 
     def process(self, packet, portmask):
-        pass
+        return packet, portmask

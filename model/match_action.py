@@ -5,4 +5,4 @@ class MatchAction(object):
         self.portmask = None
 
     def process(self, packet, portmask):
-        pass
+        return packet, portmask

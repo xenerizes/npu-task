@@ -77,8 +77,9 @@ class Application(object):
         output = []
         for packet in self.input:
             portmask = None
+            pkt = packet
             for p in self.processors:
-                pkt, portmask = p.process(packet)
+                pkt, portmask = p.process(pkt, portmask)
                 if not pkt:
                     break
             output.append((pkt, portmask))
