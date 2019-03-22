@@ -137,13 +137,42 @@ class MatchAction(object):
         self.op_impl(op, lambda x, y: not x and y or x and not y)
 
     def shl(self, op):
-        pass
+        reg = getattr(self, op.left)
+        reg[op.right:] = reg[:-op.right]
+        reg[:op.right] = [0] * op.right
 
     def shr(self, op):
-        pass
+        reg = getattr(self, op.left)
+        reg[:op.right] = reg[op.right:]
+        reg[op.right:] = [0] * (REGISTER_LEN - op.right)
 
     def call(self, procedure):
-        pass
+        if procedure not in ["exact_match", "longest_prefix_match"]:
+            raise Exception("Cannot find procedure {}".format(procedure))
+        self.search()
+
+    def search(self):
+        key = str(self.r1[:6])
+        self.r2 = [0] * REGISTER_LEN
+        if self.ast.leaf.id == 1:
+            table_src = {
+                '\x01\x02\x03\x04\x05\x06': 4,
+                '\x01\x02\x04\x08\x16\x32': 5
+            }
+            if key in table_src:
+                self.r1 = [0] * REGISTER_LEN
+                self.r1[:6] = table_src[key]
+            else:
+                self.r2[0] = 1
+        else:
+            table_dst = {
+                '\x01\x02\x04\x08\x16\x32': 5
+            }
+            if key in table_dst:
+                self.r1 = [0] * REGISTER_LEN
+                self.r1[:6] = table_dst[key]
+            else:
+                self.r2[0] = 1
 
     def cmpje(self, op):
         return getattr(self, op.reg.name) == op.num
