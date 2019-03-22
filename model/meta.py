@@ -10,4 +10,4 @@ class Context(object):
         self.packet = packet
         self.header = _split_header(packet)
         self.phv = [0] * PHV_LEN
-        self.portmask = 0x00
+        self.portmask = [0x00]
