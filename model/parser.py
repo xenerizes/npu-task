@@ -85,7 +85,7 @@ class Parser(object):
             reg = getattr(self, dst.name)
             reg[:nbytes] = value
         else:
-            raise Exception('Unknown type of first operand for mov: {}'.format(type(op.dst)))
+            raise Exception('Unknown type of first operand for mov: {}'.format(type(dst)))
 
     def cmpje(self, op):
         return getattr(self, op.reg.name) == op.num
