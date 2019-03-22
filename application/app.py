@@ -108,7 +108,7 @@ class Application(object):
                 context = p.process(context)
                 if not packet:
                     break
-            output_ports = convert_portmask(context.portmask[0])
+            output_ports = convert_portmask(context.portmask)
             for port in output_ports:
                 output[port].append(packet)
         return output

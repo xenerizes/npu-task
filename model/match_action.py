@@ -85,7 +85,7 @@ class MatchAction(object):
         elif isinstance(src, Portmask):
             if nbytes > 1:
                 raise Exception("Cannot mov more than 1 byte from portmask!")
-            value = self.portmask[:]
+            value = self.portmask
         elif isinstance(src, int):
             value = to_bytes(src, nbytes)
         elif isinstance(src, Reg):
@@ -122,7 +122,7 @@ class MatchAction(object):
             value = to_register(value)
             reg[:] = [func(reg[i], value[i]) for i in range(len(value))]
         elif isinstance(dst, Portmask):
-            self.portmask[0] = func(self.portmask[0], value[0])
+            self.portmask = func(self.portmask, value[0])
         else:
             raise Exception('Unknown type of first operand for {}: {}'
                             .format(op.opcode, type(dst)))
