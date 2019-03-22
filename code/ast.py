@@ -4,6 +4,11 @@ class Node(object):
         self.leaf = leaf
 
 
+class Section(object):
+    def __init__(self, id):
+        self.id = id
+
+
 class Op(object):
     def __init__(self, opcode):
         self.opcode = opcode
@@ -29,6 +34,11 @@ class Jump(object):
         self.label = label
 
 
+class Call(object):
+    def __init__(self, procedure):
+        self.procedure = procedure
+
+
 class Label(object):
     def __init__(self, name):
         self.name = name
@@ -39,13 +49,13 @@ class Phv(object):
         self.shift = shift
 
 
+class Portmask(object):
+    pass
+
+
 class Hdr(object):
     def __init__(self, shift):
         self.shift = shift
-
-
-class Halt(object):
-    pass
 
 
 class Reg(object):
