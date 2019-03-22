@@ -17,6 +17,8 @@ def make_parser():
 
 
 def convert_portmask(portmask):
+    if portmask is None:
+        return []
     bits = list('{0:08b}'.format(portmask))
     return [b for b, v in enumerate(bits) if v is '1']
 
