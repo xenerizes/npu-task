@@ -16,7 +16,20 @@ def make_parser():
     return parser
 
 
+def convert_portmask(portmask):
+    bits = list('{0:08b}'.format(portmask))
+    return [b for b, v in enumerate(bits) if v is '1']
+
+
 def compare_output(real, expected):
+    if len(real) != len(expected):
+        return False
+    for port, packets in real.items():
+        if len(expected[port]) != len(packets):
+            return False
+        for packet in packets:
+            if packet not in expected[port]:
+                return False
     return True
 
 
@@ -83,7 +96,7 @@ class Application(object):
         return packet_map
 
     def __run_model(self):
-        output = []
+        output = {port: list() for port in range(8)}
         for packet in self.input:
             portmask = None
             pkt = packet
@@ -91,5 +104,7 @@ class Application(object):
                 pkt, portmask = p.process(pkt, portmask)
                 if not pkt:
                     break
-            output.append((pkt, portmask))
+            output_ports = convert_portmask(portmask)
+            for port in output_ports:
+                output[port].append(pkt)
         return output
