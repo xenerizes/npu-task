@@ -14,3 +14,7 @@ def to_bytes(intval, bytenum):
     except Exception:
         raise Exception("Bad params for conversion of \"{}\" in {} byte(s)"
                         .format(intval, bytenum))
+
+
+def to_register(intval):
+    return pack('>qq', intval, 0)

@@ -1,7 +1,9 @@
 from code.ast import *
 from code import MatchActionParser
 from .defines import *
-from .byte_conversion import to_bytes
+from .byte_conversion import *
+
+PORTMASK_SZ = 255
 
 
 class MatchAction(object):
@@ -104,21 +106,20 @@ class MatchAction(object):
         src = op.second
         dst = op.first
         if isinstance(src, int):
-            value = to_bytes(src, nbytes)
+            value = src
         elif isinstance(src, Reg):
-            value = getattr(self, src.name)[:nbytes]
+            value = getattr(self, src.name)
         else:
             raise Exception('Unknown type of second operand for or: {}'.format(type(src)))
 
-        if isinstance(dst, Phv):
-            self.phv[dst.shift:dst.shift + nbytes] = value
-        elif isinstance(dst, Reg):
+        if isinstance(dst, Reg):
             reg = getattr(self, dst.name)
-            reg[:nbytes] = value
+            value = to_register(value)
+            reg[:] = [reg[i] or value[i] for i in range(len(value))]
         elif isinstance(dst, Portmask):
-            if nbytes > 1:
+            if len(value) > 1:
                 raise Exception("Cannot mov more than 1 byte to portmask!")
-            self.portmask = value
+            self.portmask[0] = self.portmask[0] or value[0]
         else:
             raise Exception('Unknown type of first operand for mov: {}'.format(type(op.dst)))
 

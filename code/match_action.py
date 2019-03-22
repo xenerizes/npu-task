@@ -1,4 +1,5 @@
 from .base import BaseLexer, BaseParser
+from .ast import *
 
 
 class MatchActionLexer(BaseLexer):
@@ -38,23 +39,26 @@ class MatchActionLexer(BaseLexer):
 
 class MatchActionParser(BaseParser):
     tokens = MatchActionLexer.tokens
-    start = 'ma_sequence'
+    start = 'ma'
 
     def parse(self, text):
         lexer = MatchActionLexer()
         lexer.build()
-        result = self.parser.parse(text, lexer=lexer.lexer)
-
-    def p_ma_sequence(self, p):
-        '''ma_sequence : empty
-                       | ma ma_sequence'''
+        self.build()
+        return self.parser.parse(text, lexer=lexer.lexer)
 
     def p_ma(self, p):
         'ma : MA INT code'
+        p[0] = Node(p[3], Section(p[2]))
 
     def p_code(self, p):
         '''code : empty
-              | instruction code'''
+              | instruction code
+              | label code'''
+        if len(p) == 3:
+            p[0] = Node(p[2], p[1])
+        else:
+            p[0] = None
 
     def p_instruction(self, p):
         '''instruction : mov
@@ -66,77 +70,105 @@ class MatchActionParser(BaseParser):
                        | xor
                        | shl
                        | shr
-                       | call
-                       | label'''
+                       | call'''
+        p[0] = p[1]
 
     def p_mov(self, p):
         'mov : MOV regmem COMMA allval COMMA INT'
+        p[0] = TernaryOp('mov', p[2], p[4], p[6])
 
     def p_cmpje(self, p):
         'cmpje : CMPJE reg COMMA number COMMA label_id'
+        p[0] = Jump('cmpje', p[2], p[4], p[6])
 
     def p_cmpjn(self, p):
         'cmpjn : CMPJN reg COMMA number COMMA label_id'
+        p[0] = Jump('cmpjn', p[2], p[4], p[6])
 
     def p_j(self, p):
         'j : J label_id'
+        p[0] = Jump('j', 0, 0, p[2])
 
     def p_or(self, p):
-        'or : OR regmem COMMA regnum'
+        'or : OR regpm COMMA regnum'
+        p[0] = BinOp('or_op', p[2], p[4])
 
     def p_and(self, p):
-        'and : AND regmem COMMA regnum'
+        'and : AND regpm COMMA regnum'
+        p[0] = BinOp('and_op', p[2], p[4])
 
     def p_xor(self, p):
-        'xor : XOR regmem COMMA regnum'
+        'xor : XOR regpm COMMA regnum'
+        p[0] = BinOp('xor_op', p[2], p[4])
 
     def p_shl(self, p):
         'shl : SHL reg COMMA number'
+        p[0] = BinOp('shl', p[2], p[4])
 
     def p_shr(self, p):
         'shr : SHR reg COMMA number'
+        p[0] = BinOp('shr', p[2], p[4])
 
     def p_call(self, p):
         'call : CALL ID'
+        p[0] = Call(p[2])
 
     def p_label(self, p):
         'label : label_id COLON'
+        p[0] = Label(p[1])
 
     def p_label_id(self, p):
         '''label_id : ID
                     | HALT'''
+        p[0] = p[1]
 
     def p_reg(self, p):
         '''reg : R1
                | R2
                | R3'''
+        p[0] = Reg(p[1])
 
     def p_phv(self, p):
         'phv : PHV shift'
+        p[0] = Phv(p[2])
 
     def p_portmask(self, p):
-        'portmask : PORTMASK shift'
+        'portmask : PORTMASK'
+        p[0] = Portmask()
 
     def p_mem(self,p ):
         '''mem : phv
                | portmask'''
+        p[0] = p[1]
 
     def p_regmem(self, p):
         '''regmem : reg
                   | mem'''
+        p[0] = p[1]
+
+    def p_regpm(self, p):
+        '''regpm : reg
+                  | portmask'''
+        p[0] = p[1]
 
     def p_regnum(self, p):
         '''regnum : reg
                   | number'''
+        p[0] = p[1]
 
     def p_allval(self, p):
         '''allval : reg
                   | number
                   | mem'''
+        p[0] = p[1]
 
     def p_shift(self, p):
         '''shift : empty
                  | PLUS INT'''
+        if len(p) == 3:
+            p[0] = p[2]
+        else:
+            p[0] = 0
 
     def p_number(self, p):
         '''number : INT
