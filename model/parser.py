@@ -29,9 +29,7 @@ class Parser(object):
 
     def __fill_labels(self):
         current = self.ast
-        labels = {
-            'halt': Node(None, Label('halt'))
-        }
+        labels = dict()
         while True:
             if current is None:
                 break
@@ -53,6 +51,8 @@ class Parser(object):
                 getattr(self, leaf.opcode)(leaf)
             elif isinstance(leaf, Jump):
                 if getattr(self, leaf.opcode)():
+                    if leaf.label == HALT_LABEL:
+                        return None, None
                     if leaf.label not in self.labels:
                         raise Exception("Unknown label: {}".format(leaf.label))
                     current = self.labels[leaf.label].child
@@ -62,7 +62,7 @@ class Parser(object):
 
             current = current.child
 
-        return self.header
+        return self.header, None
 
     def store(self, phv, hdr, nbytes):
         self.header[hdr.shift:hdr.shift + nbytes] = self.phv[phv.shift:phv.shift + nbytes]

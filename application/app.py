@@ -73,8 +73,8 @@ class Application(object):
         for packet in self.input:
             portmask = None
             for p in self.processors:
-                res, portmask = p.process(packet)
-                if not res:
+                pkt, portmask = p.process(packet)
+                if not pkt:
                     break
-            output.append((packet, portmask))
+            output.append((pkt, portmask))
         return output
