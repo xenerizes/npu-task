@@ -11,5 +11,5 @@ class Deparser(object):
         self.phv = None
         self.header = None
 
-    def process(self, packet, portmask):
-        return packet, portmask
+    def process(self, packet, header, portmask):
+        return packet, header, portmask

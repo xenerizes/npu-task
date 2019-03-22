@@ -40,7 +40,7 @@ class Parser(object):
 
         return labels
 
-    def process(self, packet, portmask):
+    def process(self, packet, header, portmask):
         self.__clear_mem()
         self.header = _split_header(packet)
         current = self.ast
@@ -63,7 +63,7 @@ class Parser(object):
 
             current = current.child
 
-        return self.header, portmask
+        return packet, self.header, portmask
 
     def store(self, op):
         phv_shift = op.first.shift

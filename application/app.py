@@ -101,12 +101,12 @@ class Application(object):
         output = {port: list() for port in range(8)}
         for packet in self.input:
             portmask = None
-            pkt = packet
+            header = None
             for p in self.processors:
-                pkt, portmask = p.process(pkt, portmask)
-                if not pkt:
+                p.process(packet, header, portmask)
+                if not packet:
                     break
             output_ports = convert_portmask(portmask)
             for port in output_ports:
-                output[port].append(pkt)
+                output[port].append(packet)
         return output
