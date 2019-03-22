@@ -62,7 +62,7 @@ class Parser(object):
         phv_shift = op.first.shift
         hdr_shift = op.second.shift
         nbytes = op.third
-        self.header[hdr_shift:hdr_shift + nbytes] = self.phv[phv_shift:phv_shift + nbytes]
+        self.phv[phv_shift:phv_shift + nbytes] = self.header[hdr_shift:hdr_shift + nbytes]
 
     def mov(self, op):
         value = None
