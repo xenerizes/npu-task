@@ -1,31 +1,29 @@
 class Node(object):
-    def __init__(self, children=None, leaf=None):
-        if children:
-            self.children = children
-        else:
-            self.children = []
+    def __init__(self, child=None, leaf=None):
+        self.child = child
         self.leaf = leaf
 
 
-class Section(object):
-    def __init__(self, name):
-        self.name = name
-
-
-class BinOp(object):
-    def __init__(self, opcode, left, right):
+class Op(object):
+    def __init__(self, opcode):
         self.opcode = opcode
+
+
+class BinOp(Op):
+    def __init__(self, opcode, left, right):
+        Op.__init__(self, opcode)
         self.left, self.right = left, right
 
 
-class TernaryOp(object):
+class TernaryOp(Op):
     def __init__(self, opcode, one, two, three):
-        self.opcode = opcode
-        self.one, self.two, self.three = one, two, three
+        Op.__init__(self, opcode)
+        self.first, self.second, self.third = one, two, three
 
 
 class Jump(object):
-    def __init__(self, reg, num, label):
+    def __init__(self, opcode, reg, num, label):
+        self.opcode = opcode
         self.reg = reg
         self.num = num
         self.label = label
