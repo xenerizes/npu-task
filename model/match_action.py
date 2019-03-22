@@ -2,8 +2,7 @@ from code.ast import *
 from code import MatchActionParser
 from .defines import *
 from .byte_conversion import *
-
-PORTMASK_SZ = 255
+from .meta import Context
 
 
 class MatchAction(object):
@@ -73,6 +72,7 @@ class MatchAction(object):
                 raise Exception("Unexpected leaf type: {}".format(type(leaf)))
 
             current = current.child
+        return Context(context.packet, context.header, self.phv, self.portmask)
 
     def mov(self, op):
         value = None

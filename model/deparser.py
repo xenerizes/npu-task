@@ -1,6 +1,7 @@
 from code import DeparserParser
 from .defines import *
 from code.ast import *
+from .meta import Context
 
 
 def _update_header(packet, header):
@@ -33,6 +34,8 @@ class Deparser(object):
             else:
                 raise Exception("Unexpected leaf type: {}".format(type(leaf)))
         _update_header(context.packet, context.header)
+
+        return Context(context.packet, self.header, self.phv, context.portmask)
 
     def load(self, op):
         phv_shift = op.first.shift

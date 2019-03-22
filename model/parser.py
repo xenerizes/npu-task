@@ -2,6 +2,7 @@ from code.ast import *
 from code import ParserParser
 from .defines import *
 from .byte_conversion import to_bytes
+from .meta import Context
 
 
 class Parser(object):
@@ -59,6 +60,7 @@ class Parser(object):
                 raise Exception("Unexpected leaf type: {}".format(type(leaf)))
 
             current = current.child
+        return Context(context.packet, self.header, self.phv, context.portmask)
 
     def store(self, op):
         phv_shift = op.first.shift
