@@ -24,6 +24,8 @@ def convert_portmask(portmask):
 
 
 def compare_output(real, expected):
+    print(real)
+    print(expected)
     if len(real) != len(expected):
         return False
     for port, packets in real.items():
@@ -56,6 +58,8 @@ class Application(object):
             self.output = self.__run_model()
             if compare_output(self.output, self.expected):
                 print('ok!')
+        else:
+            print('WARNING: empty input, only syntax checking was done')
 
     def __read_asm(self):
         with open(self.args.asm, 'r') as f:
