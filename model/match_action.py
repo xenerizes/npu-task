@@ -85,7 +85,7 @@ class MatchAction(object):
         elif isinstance(src, Portmask):
             if nbytes > 1:
                 raise Exception("Cannot mov more than 1 byte from portmask!")
-            value = self.portmask
+            value = [int(self.portmask)]
         elif isinstance(src, int):
             value = to_bytes(src, nbytes)
         elif isinstance(src, Reg):
@@ -99,30 +99,25 @@ class MatchAction(object):
             reg = getattr(self, dst.name)
             reg[:nbytes] = value
         elif isinstance(dst, Portmask):
-            if nbytes > 1:
-                raise Exception("Cannot mov more than 1 byte to portmask!")
-            self.portmask = value
+            self.portmask = value[0]
         else:
             raise Exception('Unknown type of first operand for mov: {}'.format(type(dst)))
 
     def op_impl(self, op, func):
-        value = None
         dst = op.left
         src = op.right
-        if isinstance(src, int):
-            value = [src]
-        elif isinstance(src, Reg):
-            value = getattr(self, src.name)
-        else:
-            raise Exception('Unknown type of second operand for {}: {}'
-                            .format(op.opcode, type(src)))
-
         if isinstance(dst, Reg):
             reg = getattr(self, dst.name)
-            value = to_register(value)
-            reg[:] = [func(reg[i], value[i]) for i in range(len(value))]
+            value = to_register(src) if isinstance(src, int) \
+                else getattr(self, src.name) if isinstance(src, Reg) \
+                else None
+            res = [func(r, v) for r, v in zip(reg, value)]
+            setattr(self, dst, res)
         elif isinstance(dst, Portmask):
-            self.portmask = func(self.portmask, value[0])
+            value = src if isinstance(src, int) \
+                else getattr(self, src.name)[0] if isinstance(src, Reg) \
+                else None
+            self.portmask = func(self.portmask, value)
         else:
             raise Exception('Unknown type of first operand for {}: {}'
                             .format(op.opcode, type(dst)))
