@@ -21,4 +21,21 @@ class Deparser(object):
         return parser.parse(self.text)
 
     def process(self, context):
+        current = self.ast
+        self.phv = context.phv
+        self.header = context.header
+        while True:
+            if current is None:
+                break
+            leaf = current.leaf
+            if isinstance(leaf, Op):
+                getattr(self, leaf.opcode)(leaf)
+            else:
+                raise Exception("Unexpected leaf type: {}".format(type(leaf)))
         _update_header(context.packet, context.header)
+
+    def load(self, op):
+        phv_shift = op.first.shift
+        hdr_shift = op.second.shift
+        nbytes = op.third
+        self.header[hdr_shift:hdr_shift + nbytes] = self.phv[phv_shift:phv_shift + nbytes]
