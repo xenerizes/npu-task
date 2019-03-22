@@ -3,3 +3,6 @@ class MatchAction(object):
         self.text = data
         self.phv = None
         self.portmask = None
+
+    def process(self, packet, portmask):
+        pass

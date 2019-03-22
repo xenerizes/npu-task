@@ -10,3 +10,6 @@ class Deparser(object):
         self.text = data
         self.phv = None
         self.header = None
+
+    def process(self, packet, portmask):
+        pass
