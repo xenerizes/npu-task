@@ -2,6 +2,7 @@ from argparse import ArgumentParser
 from model import *
 from scapy.packet import Raw
 from scapy.utils import rdpcap
+from glob import glob
 
 
 def make_parser():
@@ -11,7 +12,7 @@ def make_parser():
     parser.add_argument('-i', '--input', metavar='PCAP', type=str, default=None,
                         help='pcap file with ')
     parser.add_argument('-o', '--output', metavar='DIR', type=str, default=None,
-                        help='directory containing output pcap files')
+                        help='name of directory containing output pcap files')
     return parser
 
 
@@ -71,7 +72,15 @@ class Application(object):
             else [Raw(packet).load for packet in rdpcap(self.args.input)]
 
     def __load_out_pcaps(self):
-        pass
+        if self.args.output is None:
+            return None
+
+        pcap_list = glob('{}/*.pcap'.format(self.args.output))
+        packet_map = dict()
+        for port in range(8):
+            port_pcap = [pcap for pcap in pcap_list if pcap.endswith('{}.pcap'.format(port))][0]
+            packet_map[port] = [Raw(packet).load for packet in rdpcap(port_pcap)]
+        return packet_map
 
     def __run_model(self):
         output = []
