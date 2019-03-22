@@ -100,13 +100,12 @@ class Application(object):
     def __run_model(self):
         output = {port: list() for port in range(8)}
         for packet in self.input:
-            portmask = None
-            header = None
+            context = Context(packet)
             for p in self.processors:
-                p.process(packet, header, portmask)
+                p.process(context)
                 if not packet:
                     break
-            output_ports = convert_portmask(portmask)
+            output_ports = convert_portmask(context.portmask)
             for port in output_ports:
                 output[port].append(packet)
         return output

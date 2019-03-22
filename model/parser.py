@@ -4,10 +4,6 @@ from .defines import *
 from .byte_conversion import to_bytes
 
 
-def _split_header(packet):
-    return [b for b in packet[:HEADER_LEN]]
-
-
 class Parser(object):
     def __init__(self, data):
         self.text = data
@@ -19,8 +15,6 @@ class Parser(object):
         self.r2 = None
 
     def __clear_mem(self):
-        self.phv = [0] * PHV_LEN
-        self.header = None
         self.r1 = [0] * REGISTER_LEN
         self.r2 = [0] * REGISTER_LEN
 
@@ -40,10 +34,11 @@ class Parser(object):
 
         return labels
 
-    def process(self, packet, header, portmask):
+    def process(self, context):
         self.__clear_mem()
-        self.header = _split_header(packet)
         current = self.ast
+        self.phv = context.phv
+        self.header = context.header
         while True:
             if current is None:
                 break
@@ -62,8 +57,6 @@ class Parser(object):
                 raise Exception("Unexpected leaf type: {}".format(type(leaf)))
 
             current = current.child
-
-        return packet, self.header, portmask
 
     def store(self, op):
         phv_shift = op.first.shift

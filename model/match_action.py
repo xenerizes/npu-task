@@ -4,5 +4,5 @@ class MatchAction(object):
         self.phv = None
         self.portmask = None
 
-    def process(self, packet, header, portmask):
-        return packet, header, portmask
+    def process(self, context):
+        pass
