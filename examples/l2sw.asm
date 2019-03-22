@@ -17,7 +17,7 @@ done:
     or PORTMASK, r1
     j done
 not_found:
-    or PORTMASK, 0xff
+    or PORTMASK, 0x7f
 done:
 
 .deparser
