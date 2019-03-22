@@ -68,7 +68,7 @@ class ParserParser(BaseParser):
 
     def p_mov(self, p):
         'mov : MOV regmem COMMA allval COMMA INT'
-        p[0] = TernaryOp('store', p[2], p[4], p[6])
+        p[0] = TernaryOp('mov', p[2], p[4], p[6])
 
     def p_cmpje(self, p):
         'cmpje : CMPJE reg COMMA number COMMA label_id'
