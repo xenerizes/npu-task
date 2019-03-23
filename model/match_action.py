@@ -170,7 +170,6 @@ class MatchAction(object):
         reslen = self.table.reslen
         key = bytestr(self.r1[:keylen])
         self.r2 = [0] * REGISTER_LEN
-        logging.warning(self.table.records)
         if key in self.table.records:
             self.r1 = [0] * REGISTER_LEN
             self.r1[:reslen] = self.table.records[key]
