@@ -32,8 +32,10 @@ def compare_output(real, expected):
         return False
 
     for port, packets in real.items():
-        if port not in expected:
-            if len(packets):
+        if port not in expected.keys():
+            if len(packets) > 0:
+                logging.error("No packets expected on port {}, got {}"
+                              .format(port, len(packets)))
                 return False
             continue
         if set(packets) != set(expected[port]):
@@ -119,14 +121,14 @@ class Application(object):
         for packet in self.input:
             logging.debug("Starting packet processing...")
             context = Context(packet)
-            logging.debug("Input packet context is: {}".format(context))
+            logging.debug("Input packet is: {}\n".format(packet))
             for p in self.processors:
                 logging.debug("Processing by {} stage...".format(type(p).__name__))
                 context = p.process(context)
                 if context is None:
-                    logging.debug("Packet dropped")
+                    logging.debug("Packet dropped\n")
                     break
-                logging.debug("Packet context after processing:\n{}".format(context))
+                logging.debug("Packet context after processing:\n{}\n".format(context))
             if context is None:
                 continue
             output_ports = convert_portmask(context.portmask)
