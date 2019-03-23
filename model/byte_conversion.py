@@ -23,6 +23,7 @@ def to_bytes(intval, bytenum):
         raise Exception("Bad params for conversion of \"{}\" in {} byte(s)"
                         .format(intval, bytenum))
 
+
 def guess_byte_count(intval):
     for val, bytes in _bytes_in.items():
         if intval < val:
@@ -33,7 +34,10 @@ def guess_byte_count(intval):
 def to_register(intval):
     bytelen = guess_byte_count(intval)
     bytestr = pack(_options[bytelen], intval)
-    return list(reversed([b for b in bytes(REGISTER_LEN - bytelen) + bytestr]))
+    bytelist = [b for b in bytestr]
+    while bytelist[0] is 0:
+        bytelist.pop(0)
+    return bytelist + [0] * (REGISTER_LEN - len(bytelist))
 
 
 def bytestr(intarray):
