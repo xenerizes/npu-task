@@ -3,6 +3,7 @@ from model import *
 from scapy.packet import Raw
 from scapy.utils import rdpcap
 from glob import glob
+from json import loads
 import logging
 
 logging.basicConfig(format='%(levelname)s: %(message)s', level=logging.DEBUG)
@@ -58,7 +59,7 @@ class Application(object):
         self.expected = None
         self.syntax_mode = False
         self.processors = []
-        self.tables = []
+        self.tables = None
 
     def run(self):
         self.asm = self.__read_asm()
@@ -102,13 +103,17 @@ class Application(object):
 
     def __load_tables(self):
         with open(self.args.tables, 'r') as file:
-            pass
+            data = loads(file.read())
+        if "tables" not in data.keys():
+            raise Exception("Incorrect tables file format")
+        return data["tables"]
 
     def __make_processors(self):
         for processor, data in self.syntax:
             for section in data:
                 self.processors.append(processor(section))
 
+        self.tables = self.__load_tables()
         for ma in filter(lambda x: isinstance(x, MatchAction), self.processors):
             ma.load_table(self.tables)
 

@@ -3,6 +3,7 @@ from code import MatchActionParser
 from .defines import *
 from .byte_conversion import *
 from .meta import Context
+from .table import Table
 import logging
 
 
@@ -19,11 +20,11 @@ class MatchAction(object):
         self.table = None
 
     def load_table(self, tables):
-        instance = self.ast.leaf.id
+        instance = str(self.ast.leaf.id)
         if instance not in tables:
             raise Exception("Table with id {} is undefined. "
                             "Check your section enumeration".format(instance))
-        self.table = tables[instance]
+        self.table = Table(tables[instance])
 
     def __clear_mem(self):
         self.r1 = [0] * REGISTER_LEN
@@ -165,29 +166,16 @@ class MatchAction(object):
         self.search()
 
     def search(self):
-        keylen = 6
-        reslen = 1
+        keylen = self.table.keylen
+        reslen = self.table.reslen
         key = bytestr(self.r1[:keylen])
         self.r2 = [0] * REGISTER_LEN
-        if self.ast.leaf.id == 1:
-            table_src = {
-                b'\x01\x02\x03\x04\x05\x06': [0x01]
-            }
-            if key in table_src:
-                self.r1 = [0] * REGISTER_LEN
-                self.r1[:reslen] = table_src[key]
-            else:
-                self.r2[0] = 1
+        logging.warning(self.table.records)
+        if key in self.table.records:
+            self.r1 = [0] * REGISTER_LEN
+            self.r1[:reslen] = self.table.records[key]
         else:
-            table_dst = {
-                b'\x01\x02\x03\x04\x05\x06': [0x10],
-                b'\x01\x02\x04\x08\x16\x32': [0x20]
-            }
-            if key in table_dst:
-                self.r1 = [0] * REGISTER_LEN
-                self.r1[:reslen] = table_dst[key]
-            else:
-                self.r2[0] = 1
+            self.r2[0] = 1
 
     def cmpje(self, op):
         return getattr(self, op.reg.name) == to_register(op.num)
