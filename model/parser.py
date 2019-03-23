@@ -51,10 +51,13 @@ class Parser(object):
                 break
             leaf = current.leaf
             if isinstance(leaf, Op):
+                logging.debug("Applying op \'{}\'...".format(leaf.opcode))
                 getattr(self, leaf.opcode)(leaf)
                 logging.debug("Parser memory dump after op \'{}\'\n{}\n"
                               .format(leaf.opcode, self.__dump_registers()))
             elif isinstance(leaf, Jump):
+                logging.debug("Applying \'{}\' to label \'{}\'..."
+                              .format(leaf.opcode, leaf.label))
                 if getattr(self, leaf.opcode)(leaf):
                     if leaf.label == HALT_LABEL:
                         return None, None

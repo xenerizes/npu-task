@@ -61,10 +61,13 @@ class MatchAction(object):
                 break
             leaf = current.leaf
             if isinstance(leaf, Op):
+                logging.debug("Applying op \'{}\'...".format(leaf.opcode))
                 getattr(self, leaf.opcode)(leaf)
                 logging.debug("Match-Action memory dump after op \'{}\'\n{}\n"
                               .format(leaf.opcode, self.__dump_registers()))
             elif isinstance(leaf, Jump):
+                logging.debug("Applying \'{}\' to label \'{}\'..."
+                              .format(leaf.opcode, leaf.label))
                 if getattr(self, leaf.opcode)(leaf):
                     if leaf.label == HALT_LABEL:
                         return None, None
@@ -73,6 +76,8 @@ class MatchAction(object):
                     current = self.labels[leaf.label].child
                     continue
             elif isinstance(leaf, Call):
+                logging.debug("Calling \'{}\'..."
+                              .format(leaf.procedure))
                 self.call(leaf.procedure)
                 logging.debug("Match-Action memory dump after op \'call\'\n{}\n"
                               .format(self.__dump_registers()))

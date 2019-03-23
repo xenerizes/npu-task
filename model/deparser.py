@@ -36,6 +36,7 @@ class Deparser(object):
                 break
             leaf = current.leaf
             if isinstance(leaf, Op):
+                logging.debug("Applying op \'{}\'...".format(leaf.opcode))
                 getattr(self, leaf.opcode)(leaf)
                 logging.debug("Deparser memory dump after op \'{}\'\n{}\n"
                               .format(leaf.opcode, self.__dump_registers()))
