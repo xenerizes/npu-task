@@ -188,10 +188,10 @@ class MatchAction(object):
                 self.r2[0] = 1
 
     def cmpje(self, op):
-        return getattr(self, op.reg.name) == op.num
+        return getattr(self, op.reg.name) == to_register(op.num)
 
     def cmpjn(self, op):
-        return getattr(self, op.reg.name) != op.num
+        return getattr(self, op.reg.name) != to_register(op.num)
 
     def j(self, op):
         return True

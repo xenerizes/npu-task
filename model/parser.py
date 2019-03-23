@@ -106,10 +106,10 @@ class Parser(object):
             raise Exception('Unknown type of first operand for mov: {}'.format(type(dst)))
 
     def cmpje(self, op):
-        return getattr(self, op.reg.name) == op.num
+        return getattr(self, op.reg.name) == to_register(op.num)
 
     def cmpjn(self, op):
-        return getattr(self, op.reg.name) != op.num
+        return getattr(self, op.reg.name) != to_register(op.num)
 
     def j(self, op):
         return True

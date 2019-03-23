@@ -18,7 +18,7 @@ def to_bytes(intval, bytenum):
 
 
 def to_register(intval):
-    bytestr = pack('>qq', intval, 0)
+    bytestr = pack('<qq', intval, 0)
     return [b for b in bytestr]
 
 
