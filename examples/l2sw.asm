@@ -4,7 +4,7 @@
     cmpje r1, 0xffffffffffff, halt
 
 .match_action 1
-    mov r1, PHV+6, 6
+    mov r1, PHV, 6
     call exact_match
     cmpje r1, 1, done
     or PORTMASK, 0x80
