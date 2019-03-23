@@ -16,6 +16,8 @@ def make_parser():
                         help='pcap file with ')
     parser.add_argument('-o', '--output', metavar='DIR', type=str, default=None,
                         help='name of directory containing output pcap files')
+    parser.add_argument('-t', '--tables', metavar='JSON', type=str, default=None,
+                        help='json file containing switch tables')
     return parser
 
 
@@ -54,18 +56,21 @@ class Application(object):
         self.input = None
         self.output = None
         self.expected = None
+        self.syntax_mode = False
         self.processors = []
+        self.tables = []
 
     def run(self):
         self.asm = self.__read_asm()
         self.syntax = self.__split()
         self.input = self.__load_in_pcaps()
-        if self.input is None:
+        self.syntax_mode = self.input is None or self.args.tables is None
+        if self.syntax_mode:
             logging.warning('Empty input, syntax check mode')
 
         self.__make_processors()
         logging.info("Syntax is correct")
-        if self.input is None:
+        if self.syntax_mode:
             return
 
         self.expected = self.__load_out_pcaps()
@@ -95,10 +100,17 @@ class Application(object):
             (Deparser, deparser_data)
         ]
 
+    def __load_tables(self):
+        with open(self.args.tables, 'r') as file:
+            pass
+
     def __make_processors(self):
         for processor, data in self.syntax:
             for section in data:
                 self.processors.append(processor(section))
+
+        for ma in filter(lambda x: isinstance(x, MatchAction), self.processors):
+            ma.load_table(self.tables)
 
     def __load_in_pcaps(self):
         return None if self.args.input is None \
