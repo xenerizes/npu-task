@@ -131,11 +131,12 @@ class MatchAction(object):
                 else getattr(self, src.name) if isinstance(src, Reg) \
                 else None
             res = [func(r, v) for r, v in zip(reg, value)]
-            setattr(self, dst, res)
+            setattr(self, dst.name, res)
         elif isinstance(dst, Portmask):
             value = src if isinstance(src, int) \
                 else getattr(self, src.name)[0] if isinstance(src, Reg) \
                 else None
+            print('\n\t{}\n'.format(value))
             self.portmask = func(self.portmask, value)
         else:
             raise Exception('Unknown type of first operand for {}: {}'
@@ -151,12 +152,12 @@ class MatchAction(object):
         self.op_impl(op, lambda x, y: x ^ y)
 
     def shl(self, op):
-        reg = getattr(self, op.left)
+        reg = getattr(self, op.left.name)
         reg[op.right:] = reg[:-op.right]
         reg[:op.right] = [0] * op.right
 
     def shr(self, op):
-        reg = getattr(self, op.left)
+        reg = getattr(self, op.left.name)
         reg[:op.right] = reg[op.right:]
         reg[op.right:] = [0] * (REGISTER_LEN - op.right)
 
@@ -177,9 +178,11 @@ class MatchAction(object):
             self.r2[0] = 1
 
     def cmpje(self, op):
+        logging.warning(to_register(op.num))
         return getattr(self, op.reg.name) == to_register(op.num)
 
     def cmpjn(self, op):
+        logging.warning(to_register(op.num))
         return getattr(self, op.reg.name) != to_register(op.num)
 
     def j(self, op):
