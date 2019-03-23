@@ -3,6 +3,7 @@ from .defines import *
 from code.ast import *
 from .meta import Context
 from .byte_conversion import bytestr
+import logging
 
 
 def _update_header(packet, header):
@@ -36,6 +37,8 @@ class Deparser(object):
             leaf = current.leaf
             if isinstance(leaf, Op):
                 getattr(self, leaf.opcode)(leaf)
+                logging.debug("Deparser memory dump after op \'{}\'\n{}\n"
+                              .format(leaf.opcode, self.__dump_registers()))
             else:
                 raise Exception("Unexpected leaf type: {}".format(type(leaf)))
         _update_header(context.packet, context.header)

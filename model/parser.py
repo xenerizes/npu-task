@@ -3,6 +3,7 @@ from code import ParserParser
 from .defines import *
 from .byte_conversion import *
 from .meta import Context
+import logging
 
 
 class Parser(object):
@@ -36,7 +37,7 @@ class Parser(object):
         return labels
 
     def __dump_registers(self):
-        return "PHV: {}\nHEADER: {}\nR1: {}\nR2: {}"\
+        return "\tPHV: {}\n\tHEADER: {}\n\tR1: {}\n\tR2: {}"\
             .format(bytestr(self.phv), bytestr(self.header),
                     bytestr(self.r1), bytestr(self.r2))
 
@@ -51,6 +52,8 @@ class Parser(object):
             leaf = current.leaf
             if isinstance(leaf, Op):
                 getattr(self, leaf.opcode)(leaf)
+                logging.debug("Parser memory dump after op \'{}\'\n{}\n"
+                              .format(leaf.opcode, self.__dump_registers()))
             elif isinstance(leaf, Jump):
                 if getattr(self, leaf.opcode)(leaf):
                     if leaf.label == HALT_LABEL:

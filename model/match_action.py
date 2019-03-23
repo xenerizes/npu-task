@@ -3,6 +3,7 @@ from code import MatchActionParser
 from .defines import *
 from .byte_conversion import *
 from .meta import Context
+import logging
 
 
 class MatchAction(object):
@@ -46,7 +47,7 @@ class MatchAction(object):
         return labels
 
     def __dump_registers(self):
-        return "PHV: {}\nPORTMASK: {}\nR1: {}\nR2: {}\nR3: {}"\
+        return "\tPHV: {}\n\tPORTMASK: {}\n\tR1: {}\n\tR2: {}\n\tR3: {}"\
             .format(bytestr(self.phv), bytestr(self.portmask),
                     bytestr(self.r1), bytestr(self.r2), bytestr(self.r3))
 
@@ -61,6 +62,8 @@ class MatchAction(object):
             leaf = current.leaf
             if isinstance(leaf, Op):
                 getattr(self, leaf.opcode)(leaf)
+                logging.debug("Match-Action memory dump after op \'{}\'\n{}\n"
+                              .format(leaf.opcode, self.__dump_registers()))
             elif isinstance(leaf, Jump):
                 if getattr(self, leaf.opcode)(leaf):
                     if leaf.label == HALT_LABEL:
@@ -71,6 +74,8 @@ class MatchAction(object):
                     continue
             elif isinstance(leaf, Call):
                 self.call(leaf.procedure)
+                logging.debug("Match-Action memory dump after op \'call\'\n{}\n"
+                              .format(self.__dump_registers()))
             elif isinstance(leaf, Label):
                 pass
             else:
