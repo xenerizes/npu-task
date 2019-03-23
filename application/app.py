@@ -22,13 +22,11 @@ def make_parser():
 def convert_portmask(portmask):
     if portmask is None:
         return []
-    bits = list('{0:08b}'.format(portmask))
+    bits = reversed(list('{0:08b}'.format(portmask)))
     return [b for b, v in enumerate(bits) if v is '1']
 
 
 def compare_output(real, expected):
-    print(real)
-    print(expected)
     if None in [real, expected]:
         logging.error("Nothing to compare at one of the sides!")
         return False
@@ -125,7 +123,7 @@ class Application(object):
             for p in self.processors:
                 logging.debug("Processing by {} stage...".format(type(p).__name__))
                 context = p.process(context)
-                logging.debug("Packet context after processing: {}".format(context))
+                logging.debug("Packet context after processing:\n{}".format(context))
             output_ports = convert_portmask(context.portmask)
             for port in output_ports:
                 output[port].append(packet)
