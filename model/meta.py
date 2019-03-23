@@ -19,4 +19,4 @@ class Context(object):
                'PORTMASK: {}\n'\
             .format(bytestr(self.header),
                     bytestr(self.phv),
-                    bytestr(self.portmask))
+                    self.portmask)

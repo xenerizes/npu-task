@@ -48,7 +48,7 @@ class MatchAction(object):
 
     def __dump_registers(self):
         return "\tPHV: {}\n\tPORTMASK: {}\n\tR1: {}\n\tR2: {}\n\tR3: {}"\
-            .format(bytestr(self.phv), bytestr(self.portmask),
+            .format(bytestr(self.phv), self.portmask,
                     bytestr(self.r1), bytestr(self.r2), bytestr(self.r3))
 
     def process(self, context):
