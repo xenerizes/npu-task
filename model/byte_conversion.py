@@ -35,7 +35,7 @@ def to_register(intval):
     bytelen = guess_byte_count(intval)
     bytestr = pack(_options[bytelen], intval)
     bytelist = [b for b in bytestr]
-    while bytelist[0] is 0:
+    while len(bytelist) > 0 and bytelist[0] is 0:
         bytelist.pop(0)
     return bytelist + [0] * (REGISTER_LEN - len(bytelist))
 
