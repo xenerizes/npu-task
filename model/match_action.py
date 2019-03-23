@@ -138,13 +138,13 @@ class MatchAction(object):
                             .format(op.opcode, type(dst)))
 
     def or_op(self, op):
-        self.op_impl(op, lambda x, y: x or y)
+        self.op_impl(op, lambda x, y: x | y)
 
     def and_op(self, op):
-        self.op_impl(op, lambda x, y: x and y)
+        self.op_impl(op, lambda x, y: x & y)
 
     def xor_op(self, op):
-        self.op_impl(op, lambda x, y: not x and y or x and not y)
+        self.op_impl(op, lambda x, y: x ^ y)
 
     def shl(self, op):
         reg = getattr(self, op.left)
