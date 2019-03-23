@@ -1,6 +1,6 @@
 .parser
     store PHV, HEADER, 12
-    mov r1, PHV, 6
+    mov r1, PHV+6, 6
     cmpje r1, 0xffffffffffff, halt
 
 .match_action 1
