@@ -56,15 +56,18 @@ class Parser(object):
                 logging.debug("Parser memory dump after op \'{}\'\n{}\n"
                               .format(leaf.opcode, self.__dump_registers()))
             elif isinstance(leaf, Jump):
-                logging.debug("Applying \'{}\' to label \'{}\'..."
-                              .format(leaf.opcode, leaf.label))
                 if getattr(self, leaf.opcode)(leaf):
+                    logging.debug("Applying \'{}\' to label \'{}\'... true"
+                                  .format(leaf.opcode, leaf.label))
                     if leaf.label == HALT_LABEL:
                         return None
                     if leaf.label not in self.labels:
                         raise Exception("Unknown label: {}".format(leaf.label))
                     current = self.labels[leaf.label].child
                     continue
+                else:
+                    logging.debug("Applying \'{}\' to label \'{}\'... false"
+                                  .format(leaf.opcode, leaf.label))
             elif isinstance(leaf, Label):
                 pass
             else:
