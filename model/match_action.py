@@ -170,7 +170,7 @@ class MatchAction(object):
         self.r2 = [0] * REGISTER_LEN
         if self.ast.leaf.id == 1:
             table_src = {
-                b'\x01\x02\x03\x04\x05\x06': 1
+                b'\x01\x02\x03\x04\x05\x06': 0x1
             }
             if key in table_src:
                 self.r1 = [0] * REGISTER_LEN
@@ -179,8 +179,8 @@ class MatchAction(object):
                 self.r2[0] = 1
         else:
             table_dst = {
-                b'\x01\x02\x03\x04\x05\x06': 4,
-                b'\x01\x02\x04\x08\x16\x32': 4
+                b'\x01\x02\x03\x04\x05\x06': 0x10,
+                b'\x01\x02\x04\x08\x16\x32': 0x20
             }
             if key in table_dst:
                 self.r1 = [0] * REGISTER_LEN
