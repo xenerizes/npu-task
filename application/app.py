@@ -89,14 +89,14 @@ class Application(object):
         if len(parser_data) != 1 or len(ma_data) < 1 or len(deparser_data) != 1:
             raise SyntaxError("At least one section of each type .parser, "
                               ".match-action and .deparser are required")
-        return {
-            Parser: parser_data,
-            MatchAction: ma_data,
-            Deparser: deparser_data
-        }
+        return [
+            (Parser, parser_data),
+            (MatchAction, ma_data),
+            (Deparser, deparser_data)
+        ]
 
     def __make_processors(self):
-        for processor, data in self.syntax.items():
+        for processor, data in self.syntax:
             for section in data:
                 self.processors.append(processor(section))
 
@@ -111,7 +111,8 @@ class Application(object):
         pcap_list = glob('{}/*.pcap'.format(self.args.output))
         packet_map = dict()
         for port in range(8):
-            port_pcap = [pcap for pcap in pcap_list if pcap.endswith('{}.pcap'.format(port))][0]
+            port_pcap = [pcap for pcap in pcap_list
+                         if pcap.endswith('{}.pcap'.format(port))][0]
             packet_map[port] = [Raw(packet).load for packet in rdpcap(port_pcap)]
         return packet_map
 
@@ -123,8 +124,7 @@ class Application(object):
             for p in self.processors:
                 logging.debug("Processing by {} stage...".format(type(p).__name__))
                 context = p.process(context)
-                if not packet:
-                    break
+                logging.debug("Packet context after processing: {}".format(context))
             output_ports = convert_portmask(context.portmask)
             for port in output_ports:
                 output[port].append(packet)
