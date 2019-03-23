@@ -130,8 +130,8 @@ class Application(object):
         for port in range(8):
             port_pcap = [pcap for pcap in pcap_list
                          if pcap.endswith('{}.pcap'.format(port))]
-            packet_map[port] = \
-                [Raw(packet).load for packet in rdpcap(port_pcap[0])] if len(port_pcap) else None
+            if len(port_pcap):
+                packet_map[port] = [Raw(packet).load for packet in rdpcap(port_pcap[0])]
         return packet_map
 
     def __run_model(self):
