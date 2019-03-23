@@ -174,7 +174,7 @@ class MatchAction(object):
             }
             if key in table_src:
                 self.r1 = [0] * REGISTER_LEN
-                self.r1[:6] = table_src[key]
+                self.r1[0] = table_src[key]
             else:
                 self.r2[0] = 1
         else:
@@ -183,7 +183,7 @@ class MatchAction(object):
             }
             if key in table_dst:
                 self.r1 = [0] * REGISTER_LEN
-                self.r1[:6] = table_dst[key]
+                self.r1[0] = table_dst[key]
             else:
                 self.r2[0] = 1
 
