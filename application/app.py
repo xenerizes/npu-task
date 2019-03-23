@@ -6,7 +6,7 @@ from glob import glob
 from json import loads
 import logging
 
-logging.basicConfig(format='%(levelname)s: %(message)s', level=logging.DEBUG)
+LOGGING_FORMAT = '%(levelname)s: %(message)s'
 
 
 def make_parser():
@@ -19,6 +19,8 @@ def make_parser():
                         help='name of directory containing output pcap files')
     parser.add_argument('-t', '--tables', metavar='JSON', type=str, default=None,
                         help='json file containing switch tables')
+    parser.add_argument('--debug', action='store_true',
+                        help='enable debug mode')
     return parser
 
 
@@ -60,6 +62,8 @@ class Application(object):
         self.syntax_mode = False
         self.processors = []
         self.tables = None
+        loglevel = logging.DEBUG if self.args.debug else logging.WARNING
+        logging.basicConfig(format=LOGGING_FORMAT, level=loglevel)
 
     def run(self):
         self.asm = self.__read_asm()
