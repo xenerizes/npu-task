@@ -42,8 +42,9 @@ class Deparser(object):
                               .format(leaf.opcode, self.__dump_registers()))
             else:
                 raise Exception("Unexpected leaf type: {}".format(type(leaf)))
-        _update_header(context.packet, context.header)
+            current = current.child
 
+        _update_header(context.packet, context.header)
         return Context(context.packet, self.header, self.phv, context.portmask)
 
     def load(self, op):
