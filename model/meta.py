@@ -14,9 +14,9 @@ class Context(object):
         self.portmask = 0x00 if portmask is None else portmask
 
     def __str__(self):
-        return 'Header: {}\n ' \
-               'PHV: {}\n' \
-               'PORTMASK: {}\n'\
+        return '\tHeader: {}\n' \
+               '\tPHV: {}\n' \
+               '\tPORTMASK: {}\n'\
             .format(bytestr(self.header),
                     bytestr(self.phv),
                     self.portmask)
