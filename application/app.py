@@ -129,8 +129,9 @@ class Application(object):
         packet_map = dict()
         for port in range(8):
             port_pcap = [pcap for pcap in pcap_list
-                         if pcap.endswith('{}.pcap'.format(port))][0]
-            packet_map[port] = [Raw(packet).load for packet in rdpcap(port_pcap)]
+                         if pcap.endswith('{}.pcap'.format(port))]
+            packet_map[port] = \
+                [Raw(packet).load for packet in rdpcap(port_pcap[0])] if len(port_pcap) else None
         return packet_map
 
     def __run_model(self):
