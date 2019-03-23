@@ -165,12 +165,12 @@ class MatchAction(object):
         self.search()
 
     def search(self):
-        key = str(self.r1[:6])
+        keylen = 6
+        key = bytestr(self.r1[:keylen])
         self.r2 = [0] * REGISTER_LEN
         if self.ast.leaf.id == 1:
             table_src = {
-                '\x01\x02\x03\x04\x05\x06': 4,
-                '\x01\x02\x04\x08\x16\x32': 5
+                b'\x01\x02\x03\x04\x05\x06': 1
             }
             if key in table_src:
                 self.r1 = [0] * REGISTER_LEN
@@ -179,7 +179,8 @@ class MatchAction(object):
                 self.r2[0] = 1
         else:
             table_dst = {
-                '\x01\x02\x04\x08\x16\x32': 5
+                b'\x01\x02\x03\x04\x05\x06': 4,
+                b'\x01\x02\x04\x08\x16\x32': 4
             }
             if key in table_dst:
                 self.r1 = [0] * REGISTER_LEN
