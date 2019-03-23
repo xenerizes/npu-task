@@ -123,7 +123,12 @@ class Application(object):
             for p in self.processors:
                 logging.debug("Processing by {} stage...".format(type(p).__name__))
                 context = p.process(context)
+                if context is None:
+                    logging.debug("Packet dropped")
+                    break
                 logging.debug("Packet context after processing:\n{}".format(context))
+            if context is None:
+                continue
             output_ports = convert_portmask(context.portmask)
             for port in output_ports:
                 output[port].append(packet)

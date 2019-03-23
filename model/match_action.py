@@ -70,7 +70,7 @@ class MatchAction(object):
                               .format(leaf.opcode, leaf.label))
                 if getattr(self, leaf.opcode)(leaf):
                     if leaf.label == HALT_LABEL:
-                        return None, None
+                        return None
                     if leaf.label not in self.labels:
                         raise Exception("Unknown label: {}".format(leaf.label))
                     current = self.labels[leaf.label].child
