@@ -45,6 +45,11 @@ class MatchAction(object):
 
         return labels
 
+    def __dump_registers(self):
+        return "PHV: {}\nPORTMASK: {}\nR1: {}\nR2: {}\nR3: {}"\
+            .format(bytestr(self.phv), bytestr(self.portmask),
+                    bytestr(self.r1), bytestr(self.r2), bytestr(self.r3))
+
     def process(self, context):
         self.__clear_mem()
         current = self.ast.child

@@ -2,6 +2,7 @@ from code import DeparserParser
 from .defines import *
 from code.ast import *
 from .meta import Context
+from .byte_conversion import bytestr
 
 
 def _update_header(packet, header):
@@ -20,6 +21,10 @@ class Deparser(object):
     def __generate_ast(self):
         parser = DeparserParser()
         return parser.parse(self.text)
+
+    def __dump_registers(self):
+        return "PHV: {}\nHEADER: {}"\
+            .format(bytestr(self.phv), bytestr(self.header))
 
     def process(self, context):
         current = self.ast

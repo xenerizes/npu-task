@@ -1,7 +1,7 @@
 from code.ast import *
 from code import ParserParser
 from .defines import *
-from .byte_conversion import to_bytes
+from .byte_conversion import *
 from .meta import Context
 
 
@@ -34,6 +34,11 @@ class Parser(object):
             current = current.child
 
         return labels
+
+    def __dump_registers(self):
+        return "PHV: {}\nHEADER: {}\nR1: {}\nR2: {}"\
+            .format(bytestr(self.phv), bytestr(self.header),
+                    bytestr(self.r1), bytestr(self.r2))
 
     def process(self, context):
         self.__clear_mem()
