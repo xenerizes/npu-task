@@ -1,12 +1,9 @@
 from .defines import *
+from .byte_conversion import bytestr
 
 
 def _split_header(packet):
     return [b for b in packet[:HEADER_LEN]]
-
-
-def _bytestr(intarray):
-    return bytes(bytearray(intarray))
 
 
 class Context(object):
@@ -20,6 +17,6 @@ class Context(object):
         return 'Header: {}\n ' \
                'PHV: {}\n' \
                'PORTMASK: {}\n'\
-            .format(_bytestr(self.header),
-                    _bytestr(self.phv),
-                    _bytestr(self.portmask))
+            .format(bytestr(self.header),
+                    bytestr(self.phv),
+                    bytestr(self.portmask))
