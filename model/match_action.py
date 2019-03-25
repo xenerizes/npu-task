@@ -49,11 +49,11 @@ class MatchAction(object):
 
     def __dump_registers(self):
         return "\tPHV: {}\n\tPORTMASK: {}\n\tR1: {}\n\tR2: {}\n\tR3: {}"\
-            .format(mem_to_str_le(self.phv)[::-1],
+            .format(mem_to_str_le(self.phv),
                     portmask_bits(self.portmask),
-                    mem_to_str_le(self.r1)[::-1],
-                    mem_to_str_le(self.r2)[::-1],
-                    mem_to_str_le(self.r3)[::-1])
+                    mem_to_str_le(self.r1),
+                    mem_to_str_le(self.r2),
+                    mem_to_str_le(self.r3))
 
     def process(self, context):
         self.__clear_mem()

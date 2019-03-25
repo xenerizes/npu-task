@@ -26,7 +26,7 @@ class Deparser(object):
     def __dump_registers(self):
         return "\n\tHEADER: {}\n\tPHV: {}"\
             .format(mem_to_str_be(self.header),
-                    mem_to_str_le(self.phv)[::-1])
+                    mem_to_str_le(self.phv))
 
     def process(self, context):
         current = self.ast
