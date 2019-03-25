@@ -53,7 +53,7 @@ class Parser(object):
                 break
             leaf = current.leaf
             if isinstance(leaf, Op):
-                logging.debug("Applying op \'{}\'...".format(leaf.opcode))
+                logging.debug("Applying instruction \'{}\'...".format(leaf))
                 getattr(self, leaf.opcode)(leaf)
                 logging.debug("Parser memory dump after op \'{}\'\n{}\n"
                               .format(leaf.opcode, self.__dump_registers()))

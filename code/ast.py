@@ -19,11 +19,18 @@ class BinOp(Op):
         Op.__init__(self, opcode)
         self.left, self.right = left, right
 
+    def __str__(self):
+        return "{} {}, {}".format(self.opcode, self.left, self.right)
+
 
 class TernaryOp(Op):
     def __init__(self, opcode, one, two, three):
         Op.__init__(self, opcode)
         self.first, self.second, self.third = one, two, three
+
+    def __str__(self):
+        return "{} {}, {}, {}".format(self.opcode, self.first,
+                                      self.second, self.third)
 
 
 class Jump(object):
@@ -48,16 +55,26 @@ class Phv(object):
     def __init__(self, shift):
         self.shift = shift
 
+    def __str__(self):
+        return "PHV{}".format('+{}'.format(self.shift) if self.shift else '')
+
 
 class Portmask(object):
-    pass
+    def __str__(self):
+        return "PORTMASK"
 
 
 class Hdr(object):
     def __init__(self, shift):
         self.shift = shift
 
+    def __str__(self):
+        return "HEADER{}".format('+{}'.format(self.shift) if self.shift else '')
+
 
 class Reg(object):
     def __init__(self, name):
         self.name = name
+
+    def __str__(self):
+        return self.name
