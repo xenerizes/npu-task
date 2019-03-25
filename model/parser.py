@@ -107,6 +107,29 @@ class Parser(object):
         else:
             raise Exception('Unknown type of first operand for mov: {}'.format(type(dst)))
 
+    def op_impl(self, op, func):
+        dst = op.left
+        src = op.right
+        if isinstance(dst, Reg):
+            reg = getattr(self, dst.name)
+            value = to_register(src) if isinstance(src, int) \
+                else getattr(self, src.name) if isinstance(src, Reg) \
+                else None
+            res = [func(r, v) for r, v in zip(reg, value)]
+            setattr(self, dst.name, res)
+        else:
+            raise Exception('Unknown type of first operand for {}: {}'
+                            .format(op.opcode, type(dst)))
+
+    def or_op(self, op):
+        self.op_impl(op, lambda x, y: x | y)
+
+    def and_op(self, op):
+        self.op_impl(op, lambda x, y: x & y)
+
+    def xor_op(self, op):
+        self.op_impl(op, lambda x, y: x ^ y)
+
     def cmpje(self, op):
         return getattr(self, op.reg.name) == to_register(op.num)
 

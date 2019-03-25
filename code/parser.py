@@ -16,6 +16,9 @@ class ParserLexer(BaseLexer):
         'cmpje': 'CMPJE',
         'cmpjn': 'CMPJN',
         'j': 'J',
+        'xor': 'XOR',
+        'or': 'OR',
+        'and': 'AND',
         'r1': 'R1',
         'r2': 'R2',
         'halt': 'HALT'
@@ -57,6 +60,9 @@ class ParserParser(BaseParser):
     def p_instructions(self, p):
         '''instruction : store
                        | mov
+                       | xor
+                       | or
+                       | and
                        | cmpje
                        | cmpjn
                        | j'''
@@ -81,6 +87,18 @@ class ParserParser(BaseParser):
     def p_j(self, p):
         'j : J label_id'
         p[0] = Jump('j', 0, 0, p[2])
+
+    def p_or(self, p):
+        'or : OR reg COMMA regnum'
+        p[0] = BinOp('or_op', p[2], p[4])
+
+    def p_and(self, p):
+        'and : AND reg COMMA regnum'
+        p[0] = BinOp('and_op', p[2], p[4])
+
+    def p_xor(self, p):
+        'xor : XOR reg COMMA regnum'
+        p[0] = BinOp('xor_op', p[2], p[4])
 
     def p_label(self, p):
         'label : label_id COLON'
@@ -107,6 +125,11 @@ class ParserParser(BaseParser):
     def p_regmem(self, p):
         '''regmem : reg
                   | phv'''
+        p[0] = p[1]
+
+    def p_regnum(self, p):
+        '''regnum : reg
+                  | number'''
         p[0] = p[1]
 
     def p_allval(self, p):
