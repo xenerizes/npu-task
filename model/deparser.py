@@ -9,7 +9,7 @@ import logging
 def _update_header(packet, header):
     packet = bytearray(packet)
     packet[:HEADER_LEN] = header
-    packet = bytes(packet)
+    return bytes(packet)
 
 
 class Deparser(object):
@@ -45,7 +45,7 @@ class Deparser(object):
                 raise Exception("Unexpected leaf type: {}".format(type(leaf)))
             current = current.child
 
-        _update_header(context.packet, context.header)
+        context.packet = _update_header(context.packet, context.header)
         return Context(context.packet, self.header, self.phv, context.portmask)
 
     def load(self, op):
