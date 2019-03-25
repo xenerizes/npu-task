@@ -24,8 +24,8 @@ class Deparser(object):
         return parser.parse(self.text)
 
     def __dump_registers(self):
-        return "\n\tPHV: {}\n\tHEADER: {}"\
-            .format(bytestr(self.phv), bytestr(self.header))
+        return "\n\tHEADER: {}\n\tPHV: {}"\
+            .format(bytestr(self.header), bytestr(self.phv))
 
     def process(self, context):
         current = self.ast

@@ -37,9 +37,11 @@ class Parser(object):
         return labels
 
     def __dump_registers(self):
-        return "\tPHV: {}\n\tHEADER: {}\n\tR1: {}\n\tR2: {}"\
-            .format(bytestr(self.phv), bytestr(self.header),
-                    bytestr(self.r1), bytestr(self.r2))
+        return "\n\tHEADER: {}\n\tPHV: {}\n\tR1: {}\n\tR2: {}"\
+            .format(bytestr(self.header),
+                    bytestr(self.phv),
+                    bytestr(self.r1),
+                    bytestr(self.r2))
 
     def process(self, context):
         self.__clear_mem()
