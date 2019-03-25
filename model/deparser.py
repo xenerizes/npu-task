@@ -39,7 +39,7 @@ class Deparser(object):
             if isinstance(leaf, Op):
                 logging.debug("Applying instruction \'{}\'...".format(leaf))
                 getattr(self, leaf.opcode)(leaf)
-                logging.debug("Deparser memory dump after op \'{}\'\n{}\n"
+                logging.debug("Deparser memory dump after op \'{}\'{}\n"
                               .format(leaf.opcode, self.__dump_registers()))
             else:
                 raise Exception("Unexpected leaf type: {}".format(type(leaf)))

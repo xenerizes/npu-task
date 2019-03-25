@@ -55,7 +55,7 @@ class Parser(object):
             if isinstance(leaf, Op):
                 logging.debug("Applying instruction \'{}\'...".format(leaf))
                 getattr(self, leaf.opcode)(leaf)
-                logging.debug("Parser memory dump after op \'{}\'\n{}\n"
+                logging.debug("Parser memory dump after op \'{}\'{}\n"
                               .format(leaf.opcode, self.__dump_registers()))
             elif isinstance(leaf, Jump):
                 if getattr(self, leaf.opcode)(leaf):
