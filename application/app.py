@@ -158,7 +158,6 @@ class Application(object):
         for packet in self.input:
             logging.debug("Starting packet processing...")
             context = Context(packet)
-            logging.debug("Input packet is: {}\n".format(packet))
             for p in self.processors:
                 logging.debug("Processing by {} stage...".format(type(p).__name__))
                 context = p.process(context)
