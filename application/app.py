@@ -44,8 +44,12 @@ def compare_output(real, expected):
                 return False
             continue
         if set(packets) != set(expected[port]):
-            logging.error("Expected {} packets on port {}, got {}"
-                          .format(len(expected[port]), port, len(packets)))
+            if len(packets) == len(expected[port]):
+                logging.error("Expected packets with different headers on port {}"
+                              .format(port))
+            else:
+                logging.error("Expected {} packets on port {}, got {}"
+                              .format(len(expected[port]), port, len(packets)))
             return False
     return True
 
