@@ -39,9 +39,9 @@ class Parser(object):
     def __dump_registers(self):
         return "\n\tHEADER: {}\n\tPHV: {}\n\tR1: {}\n\tR2: {}"\
             .format(bytestr(self.header),
-                    bytestr(self.phv),
-                    bytestr(self.r1),
-                    bytestr(self.r2))
+                    bytestr(self.phv)[::-1],
+                    bytestr(self.r1)[::-1],
+                    bytestr(self.r2)[::-1])
 
     def process(self, context):
         self.__clear_mem()
