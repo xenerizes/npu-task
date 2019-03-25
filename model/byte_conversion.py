@@ -15,6 +15,12 @@ _bytes_in = {
 }
 
 
+def portmask_bits(portmask):
+    if portmask is None:
+        return '0' * 8
+    return '{0:08b}'.format(portmask)[::-1]
+
+
 def to_bytes(intval, bytenum):
     try:
         bytestr = pack(_options[bytenum], intval)

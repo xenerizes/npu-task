@@ -1,5 +1,5 @@
 from .defines import *
-from .byte_conversion import bytestr
+from .byte_conversion import *
 
 
 def _split_header(packet):
@@ -17,4 +17,4 @@ class Context(object):
         return '\tHeader: {}\n' \
                '\tPORTMASK: {}\n'\
             .format(bytestr(self.header),
-                    self.portmask)
+                    portmask_bits(self.portmask))
