@@ -136,7 +136,6 @@ class MatchAction(object):
             value = src if isinstance(src, int) \
                 else getattr(self, src.name)[0] if isinstance(src, Reg) \
                 else None
-            print('\n\t{}\n'.format(value))
             self.portmask = func(self.portmask, value)
         else:
             raise Exception('Unknown type of first operand for {}: {}'
@@ -178,11 +177,9 @@ class MatchAction(object):
             self.r2[0] = 1
 
     def cmpje(self, op):
-        logging.warning(to_register(op.num))
         return getattr(self, op.reg.name) == to_register(op.num)
 
     def cmpjn(self, op):
-        logging.warning(to_register(op.num))
         return getattr(self, op.reg.name) != to_register(op.num)
 
     def j(self, op):
