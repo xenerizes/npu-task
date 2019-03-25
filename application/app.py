@@ -150,9 +150,9 @@ class Application(object):
                 if context is None:
                     logging.debug("Packet dropped\n")
                     break
-                logging.debug("Packet context after processing:\n{}\n".format(context))
             if context is None:
                 continue
+            logging.debug("Packet context after processing:\n{}\n".format(context))
             output_ports = convert_portmask(context.portmask)
             for port in output_ports:
                 output[port].append(packet)
