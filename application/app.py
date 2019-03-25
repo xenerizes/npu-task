@@ -53,6 +53,7 @@ def compare_output(real, expected):
                 return False
             continue
         if set(packets) != set(expected[port]):
+
             if len(packets) == len(expected[port]):
                 logging.error("Expected packets with different headers on port {}"
                               .format(port))
@@ -169,5 +170,5 @@ class Application(object):
             logging.debug("Packet context after processing:\n{}\n".format(context))
             output_ports = convert_portmask(context.portmask)
             for port in output_ports:
-                output[port].append(packet)
+                output[port].append(context.packet)
         return output
