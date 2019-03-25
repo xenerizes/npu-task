@@ -2,7 +2,7 @@ from code import DeparserParser
 from .defines import *
 from code.ast import *
 from .meta import Context
-from .byte_conversion import bytestr
+from .byte_conversion import *
 import logging
 
 
@@ -25,8 +25,8 @@ class Deparser(object):
 
     def __dump_registers(self):
         return "\n\tHEADER: {}\n\tPHV: {}"\
-            .format(bytestr(self.header),
-                    bytestr(self.phv)[::-1])
+            .format(mem_to_str_be(self.header),
+                    mem_to_str_le(self.phv)[::-1])
 
     def process(self, context):
         current = self.ast

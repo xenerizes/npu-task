@@ -16,5 +16,5 @@ class Context(object):
     def __str__(self):
         return '\tHEADER: {}\n' \
                '\tPORTMASK: {}\n'\
-            .format(bytestr(self.header),
+            .format(mem_to_str_be(self.header),
                     portmask_bits(self.portmask))

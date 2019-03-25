@@ -46,5 +46,13 @@ def to_register(intval):
     return bytelist + [0] * (REGISTER_LEN - len(bytelist))
 
 
+def mem_to_str_be(intarray):
+    return "0x" + " 0x".join("{:02x}".format(c) for c in intarray)
+
+
+def mem_to_str_le(intarray):
+    return "0x" + " 0x".join("{:02x}".format(c) for c in reversed(intarray))
+
+
 def bytestr(intarray):
     return bytes(bytearray(intarray))
