@@ -1,6 +1,8 @@
 from argparse import ArgumentParser
 from model import *
 from scapy.packet import Raw
+from scapy.layers.l2 import Ether
+from scapy.plist import PacketList
 from scapy.utils import rdpcap
 from glob import glob
 from json import loads
@@ -31,6 +33,13 @@ def convert_portmask(portmask):
     return [b for b, v in enumerate(bits) if v is '1']
 
 
+def visual(real, expected):
+    logging.info("Expected packets are:")
+    PacketList([Ether(p) for p in real]).show()
+    logging.info("Processed packets are:")
+    PacketList([Ether(p) for p in expected]).show()
+
+
 def compare_output(real, expected):
     if None in [real, expected]:
         logging.error("Nothing to compare at one of the sides!")
@@ -47,9 +56,11 @@ def compare_output(real, expected):
             if len(packets) == len(expected[port]):
                 logging.error("Expected packets with different headers on port {}"
                               .format(port))
+                visual(packets, expected[port])
             else:
                 logging.error("Expected {} packets on port {}, got {}"
                               .format(len(expected[port]), port, len(packets)))
+                visual(packets, expected[port])
             return False
     return True
 
