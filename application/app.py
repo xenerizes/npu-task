@@ -77,7 +77,7 @@ class Application(object):
         self.syntax_mode = False
         self.processors = []
         self.tables = None
-        loglevel = logging.DEBUG if self.args.debug else logging.WARNING
+        loglevel = logging.DEBUG if self.args.debug else logging.INFO
         logging.basicConfig(format=LOGGING_FORMAT, level=loglevel)
 
     def run(self):
