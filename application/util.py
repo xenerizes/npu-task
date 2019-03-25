@@ -26,11 +26,13 @@ def convert_portmask(portmask):
     return [b for b, v in enumerate(bits) if v is '1']
 
 
+def packet_list_summary(pl):
+    return '\t' + '\n\t'.join([Ether(p).summary() for p in pl])
+
+
 def visual(real, expected):
-    logging.info("Expected packets are:")
-    PacketList([Ether(p) for p in real]).show()
-    logging.info("Processed packets are:")
-    PacketList([Ether(p) for p in expected]).show()
+    logging.info("Expected packets are:\n{}".format(packet_list_summary(expected)))
+    logging.info("Processed packets are:\n{}".format(packet_list_summary(real)))
 
 
 def compare_output(real, expected):
