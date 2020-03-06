@@ -181,9 +181,12 @@ class MatchAction(object):
         reg[-op.right:REGISTER_LEN] = [0] * (op.right)
 
     def call(self, procedure):
-        if procedure not in ["exact_match", "longest_prefix_match"]:
+        if procedure in ["exact_match", "longest_prefix_match"]:
+            self.search()
+        elif procedure in ["hash"]:
+            pass
+        else:
             raise Exception("Cannot find procedure {}".format(procedure))
-        self.search()
 
     def search(self):
         keylen = self.table.keylen
@@ -195,6 +198,11 @@ class MatchAction(object):
             self.r1[:reslen] = self.table.records[key]
         else:
             self.r2[0] = 1
+
+    def hash(self):
+        val = bytestr(self.r1)
+        hashed = hash(val) << ((1 << 128) - 1)
+        self.r1 = to_register(hashed)
 
     def cmpje(self, op):
         return getattr(self, op.reg.name) == to_register(op.num)
