@@ -177,8 +177,8 @@ class MatchAction(object):
 
     def shr(self, op):
         reg = getattr(self, op.left.name)
-        reg[:op.right] = reg[op.right:]
-        reg[op.right:] = [0] * (REGISTER_LEN - op.right)
+        reg[:REGISTER_LEN - op.right] = reg[op.right:REGISTER_LEN]
+        reg[-op.right:REGISTER_LEN] = [0] * (op.right)
 
     def call(self, procedure):
         if procedure not in ["exact_match", "longest_prefix_match"]:
