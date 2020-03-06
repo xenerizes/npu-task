@@ -125,7 +125,7 @@ class MatchAction(object):
         else:
             raise Exception('Unknown type of first operand for mov: {}'.format(type(dst)))
 
-    def op_impl(self, op, func):
+    def bit_op_impl(self, op, func):
         dst = op.left
         src = op.right
         if isinstance(dst, Reg):
@@ -144,14 +144,31 @@ class MatchAction(object):
             raise Exception('Unknown type of first operand for {}: {}'
                             .format(op.opcode, type(dst)))
 
+    def ar_op_impl(self, op, func):
+        lhs = op.left
+        rhs = op.right
+        if isinstance(lhs, Reg):
+            reg = to_intval(getattr(self, lhs.name))
+            value = rhs if isinstance(rhs, int) \
+                else to_intval(getattr(self, rhs.name)) if isinstance(rhs, Reg) \
+                else None
+            res = to_register(func(reg, value))
+            setattr(self, lhs.name, res)
+        else:
+            raise Exception('Unknown type of first operand for {}: {}'
+                            .format(op.opcode, type(lhs)))
+
     def or_op(self, op):
-        self.op_impl(op, lambda x, y: x | y)
+        self.bit_op_impl(op, lambda x, y: x | y)
 
     def and_op(self, op):
-        self.op_impl(op, lambda x, y: x & y)
+        self.bit_op_impl(op, lambda x, y: x & y)
 
     def xor_op(self, op):
-        self.op_impl(op, lambda x, y: x ^ y)
+        self.bit_op_impl(op, lambda x, y: x ^ y)
+
+    def mod_op(self, op):
+        self.ar_op_impl(op, lambda x, y: x % y)
 
     def shl(self, op):
         reg = getattr(self, op.left.name)

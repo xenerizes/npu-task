@@ -18,6 +18,7 @@ class MatchActionLexer(BaseLexer):
         'or': 'OR',
         'and': 'AND',
         'xor': 'XOR',
+        'mod': 'MOD',
         'shl': 'SHL',
         'shr': 'SHR',
         'j': 'J',
@@ -68,6 +69,7 @@ class MatchActionParser(BaseParser):
                        | or
                        | and
                        | xor
+                       | mod
                        | shl
                        | shr
                        | call'''
@@ -100,6 +102,10 @@ class MatchActionParser(BaseParser):
     def p_xor(self, p):
         'xor : XOR regpm COMMA regnum'
         p[0] = BinOp('xor_op', p[2], p[4])
+
+    def p_mod(self, p):
+        'mod : MOD reg COMMA regnum'
+        p[0] = BinOp('mod_op', p[2], p[4])
 
     def p_shl(self, p):
         'shl : SHL reg COMMA number'
