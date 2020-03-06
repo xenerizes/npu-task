@@ -47,7 +47,7 @@ def to_register(intval):
 
 
 def to_intval(register):
-    return int.from_bytes(register, 'big')
+    return int.from_bytes(register, 'little')
 
 
 def mem_to_str_be(intarray):
