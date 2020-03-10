@@ -77,15 +77,15 @@ class ParserParser(BaseParser):
         p[0] = TernaryOp('mov', p[2], p[4], p[6])
 
     def p_cmpje(self, p):
-        'cmpje : CMPJE reg COMMA number COMMA label_id'
+        'cmpje : CMPJE reg COMMA number COMMA label_j_id'
         p[0] = Jump('cmpje', p[2], p[4], p[6])
 
     def p_cmpjn(self, p):
-        'cmpjn : CMPJN reg COMMA number COMMA label_id'
+        'cmpjn : CMPJN reg COMMA number COMMA label_j_id'
         p[0] = Jump('cmpjn', p[2], p[4], p[6])
 
     def p_j(self, p):
-        'j : J label_id'
+        'j : J label_j_id'
         p[0] = Jump('j', 0, 0, p[2])
 
     def p_or(self, p):
@@ -105,8 +105,12 @@ class ParserParser(BaseParser):
         p[0] = Label(p[1])
 
     def p_label_id(self, p):
-        '''label_id : ID
-                    | HALT'''
+        '''label_id : ID'''
+        p[0] = p[1]
+
+    def p_label_j_id(self, p):
+        '''label_j_id : ID
+                      | HALT'''
         p[0] = p[1]
 
     def p_reg(self, p):

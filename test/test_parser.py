@@ -123,3 +123,7 @@ class ParserParserTestCase(TestCase):
         self.assertNotEqual(ast.child.child.child, None)
         self.assertEqual(ast.child.child.child.child, None)
         self.node_label_eq(ast.child, "l2")
+
+        test_str = "parser " \
+                   "halt:"
+        self.assertRaises(Exception, self.parser.parse, test_str)
