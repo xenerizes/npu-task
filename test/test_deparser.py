@@ -61,3 +61,14 @@ class DeparserParserTestCase(TestCase):
         self.node_eq(ast, 0, 0, 3)
         self.node_eq(ast.child, 1, 3, 4)
         self.node_eq(ast.child.child, 6, 7, 2)
+
+    def test_illegal(self):
+        test_str = "deparser " \
+                   "load"
+        self.assertRaises(Exception, self.parser.parse, test_str)
+        test_str = "deparser " \
+                   "load HEADER - 1, PHV - 1, -153"
+        self.assertRaises(Exception, self.parser.parse, test_str)
+        test_str = "deparser " \
+                   "load PHV, HEADER, 11"
+        self.assertRaises(Exception, self.parser.parse, test_str)
