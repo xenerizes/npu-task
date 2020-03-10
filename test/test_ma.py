@@ -114,6 +114,10 @@ class MAParserTestCase(ParserTestCase):
         self.assertEqual(ast.child.child.child.child.child, None)
         self.node_label_eq(ast.child.child, "l2")
 
+        test_str = "match_action 2 " \
+                   "halt:"
+        self.assertRaises(Exception, self.parser.parse, test_str)
+
     def test_call(self):
         test_str = "match_action 21 " \
                    "call procedure"
