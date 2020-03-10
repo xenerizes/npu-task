@@ -72,16 +72,16 @@ PORTMASK Адрес памяти, хранящей маску выходных �
 +--------+------------+------------+----------+
 |mov     | <register>/|<value>/    |<length>  |
 |        | <memory>   |<register>/ |          |
-|        |            |<PHV>       |          |
+|        |            |<memory>    |          |
 +--------+------------+------------+----------+
-|or      | <register>/|<value>/    |          |
-|        | <portmask> |<register>  |          |
+|or      | <register> |<value>/    |          |
+|        |            |<register>  |          |
 +--------+------------+------------+----------+
-|and     | <register>/|<value>/    |          |
-|        | <portmask> |<register>  |          |
+|and     | <register> |<value>/    |          |
+|        |            |<register>  |          |
 +--------+------------+------------+----------+
-|xor     | <register>/|<value>/    |          |
-|        | <portmask> |<register>  |          |
+|xor     | <register> |<value>/    |          |
+|        |            |<register>  |          |
 +--------+------------+------------+----------+
 |cmpje   | <register> | <value>    | <label>  |
 +--------+------------+------------+----------+
