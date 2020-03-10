@@ -1,4 +1,5 @@
 from .test_parser import *
+from .test_ma import *
 from .test_deparser import *
 import unittest
 
