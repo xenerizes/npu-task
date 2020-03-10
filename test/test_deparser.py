@@ -1,16 +1,14 @@
-from unittest import TestCase
+from .helpers import ParserTestCase
 from code.deparser import DeparserParser
 from code.ast import *
 
 
-class DeparserParserTestCase(TestCase):
+class DeparserParserTestCase(ParserTestCase):
     def setUp(self):
         self.parser = DeparserParser()
 
     def node_eq(self, ast, v1, v2, v3):
-        self.assertIsInstance(ast, Node)
-        self.assertIsInstance(ast.leaf, TernaryOp)
-        self.assertEqual(ast.leaf, TernaryOp('load', Hdr(v1), Phv(v2), v3))
+        return self.node_ternary_eq(ast, 'load', Hdr(v1), Phv(v2), v3)
 
     def test_parse_empty(self):
         test_str = "deparser"
