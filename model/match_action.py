@@ -201,7 +201,7 @@ class MatchAction(object):
 
     def hash(self):
         val = bytestr(self.r1)
-        hashed = hash(val) << ((1 << 128) - 1)
+        hashed = hash(val) & ((1 << 128) - 1)
         self.r1 = to_register(hashed)
 
     def cmpje(self, op):
