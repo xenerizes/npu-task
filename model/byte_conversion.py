@@ -1,6 +1,8 @@
 from struct import pack
 from .defines import *
 
+max_int64 = 0xFFFFFFFFFFFFFFFF
+
 _options = {
     1: '>b',
     2: '>h',
@@ -34,12 +36,19 @@ def guess_byte_count(intval):
     for val, bytes in _bytes_in.items():
         if intval < val:
             return bytes
-    return 8
+    return 16
+
+
+def pack_16(intval):
+    return pack('>QQ', (intval >> 64) & max_int64, intval & max_int64)
 
 
 def to_register(intval):
     bytelen = guess_byte_count(intval)
-    bytestr = pack(_options[bytelen], intval)
+    if bytelen == 16:
+        bytestr = pack_16(intval)
+    else:
+        bytestr = pack(_options[bytelen], intval)
     bytelist = [b for b in bytestr]
     while len(bytelist) > 0 and bytelist[0] is 0:
         bytelist.pop(0)
@@ -60,3 +69,4 @@ def mem_to_str_le(intarray):
 
 def bytestr(intarray):
     return bytes(bytearray(intarray))
+

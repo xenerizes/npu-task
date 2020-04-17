@@ -183,8 +183,8 @@ class MatchAction(object):
     def call(self, procedure):
         if procedure in ["exact_match", "longest_prefix_match"]:
             self.search()
-        elif procedure in ["hash"]:
-            pass
+        elif procedure == "hash":
+            self.hash()
         else:
             raise Exception("Cannot find procedure {}".format(procedure))
 
@@ -200,7 +200,7 @@ class MatchAction(object):
             self.r2[0] = 1
 
     def hash(self):
-        val = bytestr(self.r1)
+        val = bytes(self.r1)
         hashed = hash(val) & ((1 << 128) - 1)
         self.r1 = to_register(hashed)
 
