@@ -40,12 +40,13 @@ def compare_output(real, expected):
         logging.error("Nothing to compare at one of the sides!")
         return False
 
+    errors = 0
     for port, packets in real.items():
         if port not in expected.keys():
             if len(packets) > 0:
                 logging.error("No packets expected on port {}, got {}"
                               .format(port, len(packets)))
-                return False
+                errors += 1
             continue
         if set(packets) != set(expected[port]):
 
@@ -57,5 +58,6 @@ def compare_output(real, expected):
                 logging.error("Expected {} packets on port {}, got {}"
                               .format(len(expected[port]), port, len(packets)))
                 visual(packets, expected[port])
-            return False
-    return True
+            errors += 1
+    return errors == 0
+
