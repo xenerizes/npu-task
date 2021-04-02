@@ -49,7 +49,7 @@ class Deparser(object):
         return Context(context.packet, self.header, self.phv, context.portmask)
 
     def load(self, op):
-        phv_shift = op.first.shift
-        hdr_shift = op.second.shift
+        phv_shift = op.second.shift
+        hdr_shift = op.first.shift
         nbytes = op.third
         self.header[hdr_shift:hdr_shift + nbytes] = self.phv[phv_shift:phv_shift + nbytes]
