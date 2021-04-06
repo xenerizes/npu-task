@@ -5,6 +5,7 @@ from .byte_conversion import *
 from .meta import Context
 from .table import Table
 import logging
+from hashlib import md5
 
 
 class MatchAction(object):
@@ -201,7 +202,7 @@ class MatchAction(object):
 
     def hash(self):
         val = bytes(self.r1)
-        hashed = hash(val) & ((1 << 128) - 1)
+        hashed = int(md5(val).hexdigest(), 16)
         self.r1 = to_register(hashed)
 
     def cmpje(self, op):
